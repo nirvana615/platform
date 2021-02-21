@@ -41,6 +41,26 @@ $("#exitbtn").on("mouseleave", function () {
     }
 });
 
+//消息
+$("#userbtn").on("click", function () {
+    var noticelayerindex = layer.open({
+        type: 1
+        , title: ['用户信息', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+        , area: ['500px', '500px']
+        , shade: 0
+        , offset: 'auto'
+        , closeBtn: 1
+        , maxmin: true
+        , moveOut: true
+        , content: '<p>敬请期待……</p>'
+        , zIndex: layer.zIndex
+        , success: function (layero) {
+            //置顶
+            layer.setTop(layero);
+        }
+    });
+
+});
 
 //消息
 $("#noticebtn").on("click", function () {
