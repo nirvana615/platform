@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>角色管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!--jquery-->
+    <script src="../../../Scripts/jquery-3.3.1.js"></script>
+    <!--Layui-->
+    <link href="../layuiadmin/layui2.5.6/css/layui.css" rel="stylesheet" />
+    <link href="../layuiadmin/style/admin.css" rel="stylesheet" />
+    <script src="../layuiadmin/layui2.5.6/layui.all.js"></script>
+</head>
+<body>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <table id="LAY-role-manage" lay-filter="LAY-role-manage"></table>
+                <script type="text/html" id="table-tootbar-role">
+                    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="roleedit"><i class="layui-icon layui-icon-edit"></i>编辑</a>
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        jQuery.support.cors = true;
+        var layer = layui.layer;
+        var table = layui.table;
+        var form = layui.form;
+        var userroledatas = [];//用户角色信息数据
+        var roleinfos = [];//角色信息
+        var editrolelayerindex = null;
+
+        //请求用户信息
+        GetRoleInfo();
+
+        //获取用户信息
+        function GetRoleInfo() {
+            //请求用户数据
+            $.ajax({
+                url: window.parent.servicesurl + "/api/Role/GetUserRole", type: "get",
+                success: function (data) {
+                    if (data == "") {
+                        layer.msg("无用户角色信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                        userroletable.reload({ id: 'userroletableid', data: [] });
+                    }
+                    else {
+                        var userroles = JSON.parse(data);
+                        userroledatas = [];
+                        for (var i in userroles) {
+                            var userroledata = new Object;
+                            userroledata.userid = userroles[i].Id;
+                            userroledata.username = userroles[i].UserName;
+                            userroledata.aliasname = userroles[i].AliasName;
+                            userroledata.userrolename = userroles[i].RoleName;
+                            userroledata.userrolealias = userroles[i].RoleAlias;
+                            userroledatas.push(userroledata);
+                        }
+                        userroletable.reload({ id: 'userroletableid', data: userroledatas });
+                    }
+                }, datatype: "json"
+            });
+        }
+
+        //请求角色信息
+        $.ajax({
+            url: window.parent.servicesurl + "/api/Role/GetRoleInfo", type: "get",
+            success: function (data) {
+                if (data == "") {
+                    layer.msg("无角色信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                    roleinfos = [];
+                }
+                else {
+                    var roledata = JSON.parse(data);
+                    roleinfos = [];
+                    for (var i in roledata) {
+                        var roleinfo = new Object;
+                        roleinfo.id = roledata[i].Id;
+                        roleinfo.name = roledata[i].RoleName;
+                        roleinfo.alias = roledata[i].RoleAlias;
+                        roleinfos.push(roleinfo);
+                    }
+                }
+            }, datatype: "json"
+        });
+
+        //渲染用户角色表格
+        var userroletable = table.render({
+            elem: '#LAY-role-manage'
+            , id: 'userroletableid'
+            , title: '用户角色信息'
+            , page: true
+            , even: true
+            , limit: 20
+            , initSort: { field: 'userid', type: 'asc' }
+            , toolbar: false
+            , totalRow: false
+            , cols: [[
+                { field: 'userid', title: 'ID', fixed: 'left', align: "center" }
+                , { field: 'username', title: '用户', align: "center" }
+                , { field: 'aliasname', title: '别名', align: "center" }
+                , { field: 'userrolename', title: '角色', align: "center" }
+                , { field: 'userrolealias', title: '名称', align: "center" }
+                , { fixed: 'right', width: 150, align: 'center', toolbar: '#table-tootbar-role' }
+            ]]
+            , data: userroledatas
+        });
+
+        //表格操作
+        table.on('tool(LAY-role-manage)', function (obj) {
+            if (obj.event === 'roleedit') {
+                //编辑用户
+                editrolelayerindex = layer.open({
+                    type: 1
+                    , title: ['编辑用户角色', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+                    , area: ['400px', '350px']
+                    , shade: [0.5, '#393D49']
+                    , offset: 'auto'
+                    , closeBtn: 1
+                    , maxmin: false
+                    , content: '<form class="layui-form" style="margin-top:10px" lay-filter="edituserroleform"><div class="layui-form-item"><label class="layui-form-label">角&emsp;&emsp;色</label><div class="layui-input-block" style="padding-right:10px"><select id="roleselectid" name="roleselect" lay-filter="roleselect" lay-verify="required"><option value="">请选择</option></select></div></div><div class="layui-form-item"><label class="layui-form-label">用户id</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="userid" autocomplete="off" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">用&emsp;&emsp;户</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="username" autocomplete="off" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><label class="layui-form-label">别&emsp;&emsp;名</label><div class="layui-input-block" style="padding-right:10px"><input type="text" name="aliasname" autocomplete="off" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item" style="margin-top:30px"><div class="layui-input-block"><button type="submit" class="layui-btn" lay-submit="" lay-filter="edituserrolesubmit" style="width:80px;margin-left:40px">提交</button></div></div></form>'
+                    , zIndex: layer.zIndex
+                    , success: function (layero) {
+                        //置顶
+                        layer.setTop(layero);
+                        //添加角色选项
+                        if (roleinfos.length != 0) {
+                            for (var i in roleinfos) {
+                                document.getElementById("roleselectid").innerHTML += '<option value="' + roleinfos[i].id + '">' + roleinfos[i].alias + '</option>';
+                            }
+
+                            form.render();
+                            form.render('select');
+                            form.render('select', 'roleselect');
+                        }
+                        //填充值
+                        form.val("edituserroleform", {
+                            "userid": obj.data.userid
+                            , "username": obj.data.username
+                            , "aliasname": obj.data.aliasname
+                        });
+                        //监听提交
+                        form.on('submit(edituserrolesubmit)', function (data) {
+                            $.ajax({
+                                url: window.parent.servicesurl + "/api/Role/UpdateUserRole", type: "put", data: data.field,
+                                success: function (result) {
+                                    layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                    GetRoleInfo();
+                                }, datatype: "json"
+                            });
+
+                            layer.close(editrolelayerindex);
+                            return false;
+                        });
+                    }
+                    , end: function () { }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

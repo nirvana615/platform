@@ -1,0 +1,61 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>地质灾害信息平台</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Scripts/login/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/Scripts/login/form-elements.css" />
+    <link rel="stylesheet" href="~/Scripts/login/style.css" />
+</head>
+
+<body>
+    <div class="top-content">
+        <div class="inner-bg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2 text">
+                        <img src="~/Resources/img/platformname.png" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3 form-box">
+                        <div class="form-top">
+                            <div class="form-top-left">
+                                <h3>用户登录</h3>
+                                <p>请输入账户与密码，登录指定系统</p>
+                            </div>
+                        </div>
+                        <div class="form-bottom">
+                            <form role="form" action="~/Platform/Login" method="post" class="login-form">
+                                <div class="form-group">
+                                    <label class="sr-only" for="form-username">账户</label>
+                                    <input type="text" name="username" placeholder="输入账户..." class="form-username form-control" id="username">
+                                </div>
+                                <div class="form-group">
+                                    <label class="sr-only" for="form-password">密码</label>
+                                    <input type="password" name="password" placeholder="输入密码..." class="form-password form-control" id="password">
+                                </div>
+                                @Html.ValidationMessage("failed")
+                                <button type="submit" class="btn">登录</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/login/jquery.backstretch.min.js"></script>
+    <script src="~/Scripts/login/scripts.js"></script>
+</body>
+</html>
