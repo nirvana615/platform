@@ -19,7 +19,9 @@ var automonitordevicelayerindex = null;                         //自动化监�
 var warninganalysislayerindex = null;                           //预警分析模块
 
 
-
+var headeruserlayerindex = null;                                //用户信息
+var headernoticelayerindex = null;                              //通知消息
+var headerselayerindex = null;                                  //设置
 
 var tipslayer = -1;//全局提示层
 

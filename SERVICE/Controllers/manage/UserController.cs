@@ -53,6 +53,34 @@ namespace SERVICE.Controllers
         }
 
         /// <summary>
+        /// 根据cookie获取指定用户
+        /// </summary>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetUser(string cookie)
+        {
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref user);
+
+            if (cookieResult == CookieHelper.CookieResult.SuccessCookkie)
+            {
+                if (user == null)
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "用户为空！", string.Empty));
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", JsonHelper.ToJson(user)));
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
+            }
+        }
+
+        /// <summary>
         /// 获取全部监测用户信息
         /// </summary>
         /// <returns>监测用户列表</returns>
@@ -183,6 +211,54 @@ namespace SERVICE.Controllers
                 return "无此用户！";
             }
         }
+
+        /// <summary>
+        /// 修改用户信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        public string ModiftyUser()
+        {
+            string username = HttpContext.Current.Request.Form["username"];
+            string oldpassword = HttpContext.Current.Request.Form["oldpassword"];
+            string newpassword1 = HttpContext.Current.Request.Form["newpassword1"];
+            string newpassword2 = HttpContext.Current.Request.Form["newpassword2"];
+
+            User user = null;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, HttpContext.Current.Request.Form["cookie"], ref user);
+
+            if (cookieResult == CookieHelper.CookieResult.SuccessCookkie)
+            {
+                if (newpassword1 == newpassword2)
+                {
+                    if (user == null)
+                    {
+                        return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "用户为空！", string.Empty));
+                    }
+                    else
+                    {
+                        int count = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_user SET username={0},password={1} WHERE id={2}", SQLHelper.UpdateString(username), SQLHelper.UpdateString(newpassword1), user.Id));
+                        if (count == 1)
+                        {
+                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", string.Empty));
+                        }
+                        else
+                        {
+                            return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "更新用户信息失败！", string.Empty));
+                        }
+                    }
+                }
+                else
+                {
+                    return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, "两次新密码不一致！", string.Empty));
+                }
+            }
+            else
+            {
+                return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Failure, cookieResult.GetRemark(), string.Empty));
+            }
+        }
+
 
         /// <summary>
         /// 删除用户
