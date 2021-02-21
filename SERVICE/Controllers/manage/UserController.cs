@@ -237,7 +237,7 @@ namespace SERVICE.Controllers
                     }
                     else
                     {
-                        int count = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_user SET username={0},password={1} WHERE id={2}", SQLHelper.UpdateString(username), SQLHelper.UpdateString(newpassword1), user.Id));
+                        int count = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format("UPDATE manage_user SET username={0},password={1} WHERE id={2}", SQLHelper.UpdateString(username), SQLHelper.UpdateString(MD5Encrypt.Encrypt(newpassword1)), user.Id));
                         if (count == 1)
                         {
                             return JsonHelper.ToJson(new ResponseResult((int)MODEL.Enum.ResponseResultCode.Success, "成功！", string.Empty));
