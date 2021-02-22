@@ -13,11 +13,11 @@ namespace MVC.Controllers
 {
     public class PlatformController : Controller
     {
-        private static Logger logger = Logger.CreateLogger(typeof(PlatformController));
+       private static Logger logger = Logger.CreateLogger(typeof(PlatformController));
 
 
         /// <summary>
-        /// 登录页
+        /// 登录页 你好
         /// </summary>
         /// <returns></returns>
         [HttpGet]
