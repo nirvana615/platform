@@ -37,8 +37,11 @@
     <Reference Include="BouncyCastle.Crypto, Version=1.8.3.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
       <HintPath>..\packages\BouncyCastle.1.8.3.1\lib\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
+    <Reference Include="CC">
+      <HintPath>..\..\..\..\1 PROJECT\2-2021\2-search\1-代码管理\CC.dll</HintPath>
+    </Reference>
     <Reference Include="COM">
-      <HintPath>..\..\..\platform\COM\bin\Release\COM.dll</HintPath>
+      <HintPath>..\..\..\..\1 PROJECT\2-2021\2-search\1-代码管理\COM.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.dll</HintPath>
