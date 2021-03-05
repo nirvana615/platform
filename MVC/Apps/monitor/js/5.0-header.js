@@ -62,7 +62,7 @@ $("#userbtn").on("click", function () {
     if (headeruserlayerindex == null) {
         headeruserlayerindex = layer.open({
             type: 1
-            , title: ['用户信息', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+            , title: ['修改密码', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
             , area: ['500px', '300px']
             , shade: [0.5, '#393D49']
             , offset: 'auto'
