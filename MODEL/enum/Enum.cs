@@ -43,6 +43,9 @@ namespace MODEL
             [RemarkAttribute("无人机系统")]
             Uav = 4,
 
+            [RemarkAttribute("3D Points Cloud系统")]
+            pointsCloud = 6,
+
             [RemarkAttribute("无角色")]
             Null = 99
         }

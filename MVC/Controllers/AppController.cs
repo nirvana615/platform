@@ -78,5 +78,17 @@ namespace MVC.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 3D Points Cloud系统
+        /// </summary>
+        /// <returns></returns>
+        [AuthorityFilter]
+        public ActionResult PointsCloud()
+        {
+            List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(this.HttpContext.Request.Cookies.Get("User").Value);
+            ViewBag.User = userinfo[0];
+            logger.Info("【" + ViewBag.User + "】3D Points Cloud系统");
+            return View();
+        }
     }
 }
