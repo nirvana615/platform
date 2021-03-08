@@ -77,6 +77,17 @@ namespace MVC.Controllers
             logger.Info("【" + ViewBag.User + "】登录无人机航线规划系统");
             return View();
         }
-
+        /// <summary>
+        /// 消落带采集系统
+        /// </summary>
+        /// <returns></returns>
+        [AuthorityFilter]
+        public ActionResult Flz()
+        {
+            List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(this.HttpContext.Request.Cookies.Get("User").Value);
+            ViewBag.User = userinfo[0];
+            logger.Info("【" + ViewBag.User + "】登录消落带采集系统");
+            return View();
+        }
     }
 }
