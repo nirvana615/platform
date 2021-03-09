@@ -78,5 +78,19 @@ namespace MVC.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// 无人机影像处理系统
+        /// </summary>
+        /// <returns></returns>
+        [AuthorityFilter]
+        public ActionResult Image()
+        {
+            List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(this.HttpContext.Request.Cookies.Get("User").Value);
+            ViewBag.User = userinfo[1];
+            logger.Info("【" + ViewBag.User + "】登录监测系统");
+            return View();
+        }
+
     }
 }

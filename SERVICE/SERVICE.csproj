@@ -46,10 +46,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CC">
-      <HintPath>..\..\..\..\1 PROJECT\2-2021\2-search\1-代码管理\CC.dll</HintPath>
+      <HintPath>C:\Users\Null\Desktop\CC.dll</HintPath>
     </Reference>
     <Reference Include="COM">
-      <HintPath>..\..\..\..\1 PROJECT\2-2021\2-search\1-代码管理\COM.dll</HintPath>
+      <HintPath>C:\Users\Null\Desktop\COM.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
