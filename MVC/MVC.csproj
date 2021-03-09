@@ -45,11 +45,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CC">
-      <HintPath>..\..\..\platform\CC\bin\Release\CC.dll</HintPath>
+    <Reference Include="CC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\Null\Desktop\CC.dll</HintPath>
     </Reference>
-    <Reference Include="COM">
-      <HintPath>..\..\..\platform\COM\bin\Release\COM.dll</HintPath>
+    <Reference Include="COM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Users\Null\Desktop\COM.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -1062,9 +1064,11 @@
     <Content Include="Scripts\layui\font\iconfont.ttf" />
     <Content Include="Scripts\layui\font\iconfont.woff" />
     <Content Include="Scripts\layui\font\iconfont.woff2" />
+    <Content Include="Views\App\Image.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Apps\display\" />
+    <Folder Include="Apps\image\" />
     <Folder Include="Apps\owner\" />
     <Folder Include="Apps\uav\" />
     <Folder Include="App_Data\" />
