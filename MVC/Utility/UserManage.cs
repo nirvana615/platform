@@ -163,10 +163,6 @@ namespace MVC
                     {
                         return MODEL.Enum.SystemRole.Uav;
                     }
-                    else if (role.RoleName.ToUpper() == MODEL.Enum.SystemRole.Flz.ToString().ToUpper())
-                    {
-                        return MODEL.Enum.SystemRole.Flz;
-                    }
                     else
                     {
                         return MODEL.Enum.SystemRole.Null;
