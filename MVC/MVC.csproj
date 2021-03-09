@@ -1065,7 +1065,6 @@
     <Content Include="Scripts\layui\font\iconfont.woff" />
     <Content Include="Scripts\layui\font\iconfont.woff2" />
     <Content Include="Views\App\Image.cshtml" />
-    <Content Include="Views\App\PointCloud.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Apps\display\" />

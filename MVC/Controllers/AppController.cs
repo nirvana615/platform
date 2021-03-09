@@ -92,18 +92,5 @@ namespace MVC.Controllers
             return View();
         }
 
-        /// <summary>
-        /// 3D Point CLORT处理系统
-        /// </summary>
-        /// <returns></returns>
-        [AuthorityFilter]
-        public ActionResult PointCloud()
-        {
-            List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(this.HttpContext.Request.Cookies.Get("User").Value);
-            ViewBag.User = userinfo[1];
-            logger.Info("【" + ViewBag.User + "】登录监测系统");
-            return View();
-        }
-
     }
 }
