@@ -23,7 +23,7 @@ var projectdatagrouparea = [];//按地区组织
 //获取项目列表
 function GetUserProjects() {
     $.ajax({
-        url: servicesurl + "/api/Project/GetUserProjectList", type: "get", data: { "cookie": document.cookie },
+        url: servicesurl + "/api/PointCloudProject/GetPCloudProjectList", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
             if (data == "") {
                 layer.msg("无项目信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
@@ -43,7 +43,7 @@ function GetUserProjects() {
                 var areas = [];                 //所有地区
 
                 for (var i in projectlist) {
-                    var year = projectlist[i].XMKSSJ.substr(0, 4);
+                    var year = projectlist[i].CJSJ.substr(0, 4);
                     var area = projectlist[i].XZQBM.substr(0, 6);
                     if (years.indexOf(year) == -1) {
                         years.push(year);
@@ -69,11 +69,11 @@ function GetUserProjects() {
                     }
                     var children = [];
                     for (var j in projectlist) {
-                        if (projectlist[j].XMKSSJ.substr(0, 4) == years[i]) {
+                        if (projectlist[j].CJSJ.substr(0, 4) == years[i]) {
                             var son = new Object;
-                            son.title = projectlist[j].ZHDMC;
+                            son.title = projectlist[j].XMMC;
                             son.xmmc = projectlist[j].XMMC;
-                            son.type = projectlist[j].ZHLX;
+                            //son.type = projectlist[j].ZHLX;
                             son.id = projectlist[j].Id;
                             children.push(son);
                         }
@@ -107,9 +107,8 @@ function GetUserProjects() {
                     for (var j in projectlist) {
                         if (projectlist[j].XZQBM.substr(0, 6) == areas[i]) {
                             var son = new Object;
-                            son.title = projectlist[j].ZHDMC;
+                            son.title = projectlist[j].XMMC;
                             son.xmmc = projectlist[j].XMMC;
-                            son.type = projectlist[j].ZHLX;
                             son.id = projectlist[j].Id;
                             children.push(son);
                         }
@@ -220,6 +219,7 @@ function GetUserProjects() {
                         bs.push(projectlist[i].ZXWD);
                         ls.push(projectlist[i].ZXJD);
                     }
+
                 }
 
                 if ((bs.length > 0) && (ls.length > 0)) {
