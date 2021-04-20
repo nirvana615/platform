@@ -67,7 +67,7 @@ namespace SERVICE.Controllers
                         PCloudData pCloudData = new PCloudData();
                         for (int j = 0; j < row.Length; j++)
                         {
-                            pCloudData = ParsePointCloudHelper.ParsePCloudDataLayer(row[j]);
+                            pCloudData = ParsePointCloudHelper.ParsePCloudData(row[j]);
                             PCDataLayer.PCloudDataList.Add(pCloudData);
                         }
                         PCDataLayertemp.Add(PCDataLayer);
@@ -83,5 +83,59 @@ namespace SERVICE.Controllers
                 return string.Empty;
             }
         }
+
+        /// <summary>
+        /// 获取时序数据信息（后台）
+        /// </summary>
+        /// <param name="cookie"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public string GetPointCloudDataInfo(int id, string cookie)
+        {
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                PCloudData pCloudData = ParsePointCloudHelper.ParsePCloudData(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM pointcloud_data WHERE id={0}",id)));
+                if (pCloudData != null)
+                {
+                    if (!string.IsNullOrEmpty(pCloudData.SRID.ToString()))
+                    {
+                        Coordinate coordinate = ParseManageHelper.ParseCoordinate(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM manage_coordinate WHERE srid={0}", pCloudData.SRID)));
+                        if (coordinate != null)
+                        {
+                            pCloudData.SRID = coordinate.NAME;
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(pCloudData.ProjectId.ToString()))
+                    {
+                        PCloudProject project = ParsePointCloudHelper.ParsePCloudProject(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT *FROM pointcloud_project WHERE id={0}", pCloudData.ProjectId)));
+                        if (project != null)
+                        {
+                            pCloudData.XMMC = project.XMMC;
+                            pCloudData.ZXJD = project.ZXJD.ToString();
+                            pCloudData.ZXWD = project.ZXWD.ToString();
+                        }
+                    }
+
+                    pCloudData.projectSet = new ProjectSetUp();
+                    pCloudData.projectSet.StatisticoutlierPara = ParsePointCloudHelper.ParseStatisticoutlierPara(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT   * FROM pointcloud_statisticoutlier_para  WHERE dataid ={0} ORDER BY cjsj DESC LIMIT 1", id)));
+                    pCloudData.projectSet.ICPPara = ParsePointCloudHelper.ParseICPPara(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT   * FROM pointcloud_icp_para  WHERE dataid ={0} ORDER BY cjsj DESC LIMIT 1", id)));
+                    pCloudData.projectSet.OverlapPara = ParsePointCloudHelper.ParseOverlap(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT   * FROM pointcloud_overlap  WHERE dataid ={0} ORDER BY cjsj DESC LIMIT 1", id)));
+                    pCloudData.projectSet.ShapePara = ParsePointCloudHelper.ParseShape(PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT   * FROM pointcloud_shape  WHERE dataid ={0} ORDER BY cjsj DESC LIMIT 1", id)));
+
+
+
+                    return JsonHelper.ToJson(pCloudData);
+                }
+            }
+            return string.Empty;
+        }
+
+
+
+
+
     }
 }

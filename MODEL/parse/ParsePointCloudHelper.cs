@@ -16,7 +16,7 @@ namespace MODEL
         private static Logger logger = Logger.CreateLogger(typeof(ParseMonitorHelper));
 
         /// <summary>
-        /// 点云项目信息
+        /// 点云时序数据信息
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
@@ -67,7 +67,7 @@ namespace MODEL
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public static PCloudData ParsePCloudDataLayer(string data)
+        public static PCloudData ParsePCloudData(string data)
         {
             if (string.IsNullOrEmpty(data))
             {
@@ -86,7 +86,18 @@ namespace MODEL
                     Id = Convert.ToInt32(row[0].ToString()),
                     ProjectId = Convert.ToInt32(row[1].ToString()),
                     CJSJ = row[2].ToString(),
-                    QY = Convert.ToInt32(row[8].ToString())
+                    SRID = row[4].ToString(),
+                    BSM = row[5].ToString(),
+                    ZTM = Convert.ToInt32(row[6].ToString()),
+                    BZ = row[7].ToString(),
+                    Regionid = Convert.ToInt32(row[8].ToString()),
+                    MQLCid = Convert.ToInt32(row[9].ToString()),
+                    DYSM = row[10].ToString(),
+                    Typeid = Convert.ToInt32(row[11].ToString()),
+                    CJRY = row[12].ToString(),
+                    SJGSid = Convert.ToInt32(row[13].ToString()),
+                    Deviceid = Convert.ToInt32(row[14].ToString()),
+                    CJZQ = Convert.ToInt32(row[15].ToString())
                 };
 
                 return PCloudData;
@@ -98,5 +109,146 @@ namespace MODEL
             }
         }
 
+        /// <summary>
+        /// 统计滤波参数
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static StatisticoutlierPara ParseStatisticoutlierPara(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("无点云数据！");
+                return null;
+            }
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                StatisticoutlierPara Para = new StatisticoutlierPara()
+                {
+                    Id = Convert.ToInt32(row[0].ToString()),
+                    Meank = Convert.ToInt32(row[4].ToString()),
+                    StddevMulThresh = Convert.ToInt32(row[5].ToString()),
+                    CJSJ = row[2].ToString(),
+                    ZTM = Convert.ToInt32(row[8].ToString()),
+                };
+
+                return Para;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("StatisticoutlierPara解析失败：" + data, ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// ICP配准参数
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static ICPPara ParseICPPara(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("无点云数据！");
+                return null;
+            }
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                ICPPara Para = new ICPPara()
+                {
+                    Id = Convert.ToInt32(row[0].ToString()),
+                    LeafSize = Convert.ToDouble(row[4].ToString()),
+                    MaxIteration = Convert.ToInt32(row[6].ToString()),
+                    RadiusSearch = Convert.ToDouble(row[5].ToString()),
+                    CJSJ = row[2].ToString(),
+                    ZTM = Convert.ToInt32(row[8].ToString()),
+                };
+
+                return Para;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("ICPPara解析失败：" + data, ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 非重叠区域参数
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static OverlapPara ParseOverlap(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("无点云数据！");
+                return null;
+            }
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                OverlapPara Para = new OverlapPara()
+                {
+                    Id = Convert.ToInt32(row[0].ToString()),
+                    CJSJ = row[2].ToString(),
+                    ZTM = Convert.ToInt32(row[5].ToString()),
+                };
+
+                return Para;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("OverlapPara解析失败：" + data, ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 边界提取参数
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static ShapePara ParseShape(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("无点云数据！");
+                return null;
+            }
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                ShapePara Para = new ShapePara()
+                {
+                    Id = Convert.ToInt32(row[0].ToString()),
+                    BJFF = Convert.ToInt32(row[4].ToString()),
+                    CJSJ = row[2].ToString(),
+                    ZTM = Convert.ToInt32(row[6].ToString()),
+                };
+
+                return Para;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("ShapePara解析失败：" + data, ex);
+                return null;
+            }
+        }
     }
 }
