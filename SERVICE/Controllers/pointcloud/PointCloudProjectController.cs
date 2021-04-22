@@ -134,8 +134,60 @@ namespace SERVICE.Controllers
         }
 
 
+        /// <summary>
+        /// 更新项目信息
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut]
+        public string UpdatePointCloudProjectInfo()
+        {
+            #region 参数
+            string id = HttpContext.Current.Request.Form["id"];
+            string cookie = HttpContext.Current.Request.Form["cookie"];
 
+            string XMMC = HttpContext.Current.Request.Form["xmmc"];
+            string CJRY = HttpContext.Current.Request.Form["cjry"];
+            string CJSJ = HttpContext.Current.Request.Form["cjsj"];
+            string Regionid = HttpContext.Current.Request.Form["xmqy"];
+            string ZXJD = HttpContext.Current.Request.Form["zxjd"];
+            string ZXWD = HttpContext.Current.Request.Form["zxwd"];
+            string SRID = HttpContext.Current.Request.Form["kjck"];
+            string SJGSid = HttpContext.Current.Request.Form["sjgs"];
+            string Deviceid = HttpContext.Current.Request.Form["cjsb"];
+            string Typeid = HttpContext.Current.Request.Form["sjgs"];
+            string DYSM = HttpContext.Current.Request.Form["dysm"];
+            string MQLCid = HttpContext.Current.Request.Form["mqlc"];
+            string CJZQid = HttpContext.Current.Request.Form["cjzq"];
+            string BZ = HttpContext.Current.Request.Form["bz"];
+            #endregion
 
+            string userbsms = string.Empty;
+            COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
+
+            if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
+            {
+                int count = PostgresqlHelper.QueryResultCount(pgsqlConnection, string.Format("SELECT *FROM pointcloud_project WHERE id={0} AND ztm={1}", id, (int)MODEL.Enum.State.InUse));
+                if (count == 1)
+                {
+                    if (!string.IsNullOrEmpty(CJRY)&& !string.IsNullOrEmpty(CJSJ)&& !string.IsNullOrEmpty(DYSM)&& !string.IsNullOrEmpty(BZ))
+                    {
+                        int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(
+                         "UPDATE pointcloud_data SET cjry={0},cjsj={1},number={2},bz={3} WHERE id={4}  AND ztm={5}",
+                            SQLHelper.UpdateString(CJRY),
+                            SQLHelper.UpdateString(CJSJ),
+                            DYSM,
+                            SQLHelper.UpdateString(BZ),
+                            id,
+                            (int)MODEL.Enum.State.InUse));
+                    }
+                }
+                return "更新成功！";
+            }
+            else
+            {
+                return "用户无权限！";
+            }
+        }
 
     }
 }

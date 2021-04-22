@@ -2,19 +2,25 @@
 layer.open({
     type: 1
     , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-    , area: ['300px', '600px']
+    , area: ['350px', '600px']
     , shade: 0
     , offset: ['60px', '10px']
     , closeBtn: 0
     , maxmin: true
     , moveOut: true
-    , content:'<!--工具栏--><!DOCTYPE html><html><head><meta name="generator" content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39"><title></title></head><body><div class="layui-row" style="position:absolute;top:5px;width:100%"><!--搜索--><div class="layui-col-md9" style="width:85%"><div class="grid-demo grid-demo-bg1"><input type="text" id="projectfilter" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="left:30px;height:30px;padding-left:35px;border-radius:5px"></div></div><!--创建项目--><div class="layui-col-md3" style="width:15%"><div class="grid-demo"><button id="projectadd" type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="border-style:hidden;float:right"></button></div></div></div><!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief"style="margin-top:30px"><!--选项卡--><ul class="layui-tab-title"><li class="layui-this" style="width:90%;padding-top: 3px;">项目</li></ul><!--tree--><div class="layui-tab-content"><div class="layui-tab-item layui-show" id="projectbyname"></div><div class="layui-tab-item" id="projectbytime"></div></div></div></body></html>'
+    , content:'<!--工具栏--><div class="layui-row" style="position:absolute;top:5px;width:100%">    <!--搜索-->    <div class="layui-col-md6" style="width:70%">        <div class="grid-demo grid-demo-bg1">            <input type="text" id="projectfilter" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="left:30px;height:30px;padding-left:35px;border-radius:5px">        </div>    </div>    <!--创建项目-->    <div class="layui-col-md2" style="width:10%">        <div class="grid-demo">            <button id="projectadd" type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="border-style:hidden;float:right"><i class="layui-icon layui-icon-add-circle" style="margin-right:0px"></i></button>        </div>    </div>    <!--选择文件-->    <div class="layui-col-md2" style="width:10%">        <div class="grid-demo">            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="selectpcdata" style="border-style:hidden;float:right"><i class="layui-icon layui-icon-file-b" style="margin-right:0px"></i></button>        </div>    </div>    <!--文件上传-->    <div class="layui-col-md2" style="width:10%">        <div class="grid-demo">            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="startupload" style="border-style:hidden;float:right"><i class="layui-icon layui-icon-upload-circle" style="margin-right:0px"></i></button>        </div>    </div></div><!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief"     style="margin-top:30px">    <!--选项卡-->    <ul class="layui-tab-title">        <li class="layui-this" style="width:90%;padding-top: 3px;">            项目        </li>    </ul>    <!--tree-->    <div class="layui-tab-content">        <div class="layui-tab-item layui-show" id="projectbyname"></div>        <div class="layui-tab-item" id="projectbytime"></div>    </div></div>'
     , zIndex: layer.zIndex
     , success: function (layero) {
         layer.setTop(layero);
         PointCloudProjectList();
     }
 });
+
+
+
+
+
+
 
 var projectdatagroupname = [];//按项目名称排序
 var layers = [];//图层列表数据
@@ -212,7 +218,7 @@ function PCloudProjectInfo(id, style) {
                         "xmmc": projectinfo.XMMC
                         , "cjry": projectinfo.CJRY
                         , "cjsj": projectinfo.CJSJ
-                        , "region": projectinfo.Regionid
+                        , "xmqy": projectinfo.Regionid
                         , "zxjd": projectinfo.ZXJD
                         , "zxwd": projectinfo.ZXWD
                         , "kjck": projectinfo.SRID
@@ -263,6 +269,8 @@ function PCloudProjectInfo(id, style) {
                 }
             }, datatype: "json"
         });
+
+
     }
     else if (style == "edit") {
         //编辑项目
@@ -313,7 +321,7 @@ function PCloudProjectInfo(id, style) {
                                     "xmmc": projectinfo.XMMC
                                     , "cjry": projectinfo.CJRY
                                     , "cjsj": projectinfo.CJSJ
-                                    , "region": projectinfo.Regionid
+                                    , "xmqy": projectinfo.Regionid
                                     , "zxjd": projectinfo.ZXJD
                                     , "zxwd": projectinfo.ZXWD
                                     , "kjck": projectinfo.SRID
@@ -330,7 +338,7 @@ function PCloudProjectInfo(id, style) {
                         }, datatype: "json"
                     });
 
-                    ////更新项目
+                    ////更新项目信息
                     form.on('submit(editpointcloudprojectinfosubmit)', function (data) {
                         data.field.id = id;
                         data.field.cookie = document.cookie;
@@ -344,6 +352,42 @@ function PCloudProjectInfo(id, style) {
                         return false;
                     });
 
+                    //工程设置信息
+                    $.ajax({
+                        url: servicesurl + "/api/PointCloudProjectSetUp/GetPointCloudSetupInfo", type: "get", data: { "id": id, "cookie": document.cookie },
+                        success: function (data) {
+                            if (data == "") {
+                                layer.msg("无工程设置数据信息！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                //清除项目信息
+                                form.val("pointcloudprojectsetedit", {
+                                    "meank": ""
+                                    , "StddevMulThresh": ""
+                                    , "szsj": ""
+                                    , "cjsj": ""
+                                    , "leafsize": ""
+                                    , "maxIteration": ""
+                                    , "radiusSearch": ""
+                                    , "bjff": ""
+                                });
+                            }
+                            else {
+                                //项目信息
+                                var setupinfo = JSON.parse(data);
+
+                                form.val("pointcloudprojectsetedit", {
+                                    "meank": setupinfo.StatisticoutlierPara.Meank
+                                    , "StddevMulThresh": setupinfo.StatisticoutlierPara.StddevMulThresh
+                                    , "szsj": setupinfo.StatisticoutlierPara.CJSJ
+                                    , "cjsj": setupinfo.ICPPara.CJSJ
+                                    , "leafsize": setupinfo.ICPPara.LeafSize
+                                    , "maxIteration": setupinfo.ICPPara.MaxIteration
+                                    , "radiusSearch": setupinfo.ICPPara.RadiusSearch
+                                    , "bjff": setupinfo.ShapePara.BJFF
+                                });
+                            }
+                        }, datatype: "json"
+                    });
+
                 }
                 , end: function () {
                     projectinfoeditlayerindex = null;
@@ -352,3 +396,92 @@ function PCloudProjectInfo(id, style) {
         }
     }
 };
+
+
+
+
+//创建项目
+$("#projectadd").on("click", function () {
+    //创建项目
+    if (((projectinfoviewlayerindex == null) && (projectinfoeditlayerindex == null))) {
+        //ProjectInfo(null, "add");
+    }
+    else {
+        layer.confirm('是否打开新项目?', { icon: 3, title: '提示', zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } }, function (index) {
+            CloseProjectinfoLayer();
+            //ProjectInfo(null, "add");
+            layer.close(index);
+        });
+    }
+});
+
+//新增项目提示
+$("#projectadd").on("mouseenter", function () {
+    if (tipslayer == -1) {
+        tipslayer = layer.tips('创建项目', '#projectadd', {
+            tips: [2, '#78BA32']
+        });
+    }
+});
+$("#projectadd").on("mouseleave", function () {
+    if (tipslayer != -1) {
+        layer.close(tipslayer);
+        tipslayer = -1;
+    }
+});
+
+//上传文件提示
+$("#startupload").on("mouseenter", function () {
+    if (tipslayer == -1) {
+        tipslayer = layer.tips('上传点云文件', '#startupload', {
+            tips: [2, '#78BA32']
+        });
+    }
+});
+$("#startupload").on("mouseleave", function () {
+    if (tipslayer != -1) {
+        layer.close(tipslayer);
+        tipslayer = -1;
+    }
+});
+
+//上传提示
+$("#selectpcdata").on("mouseenter", function () {
+    if (tipslayer == -1) {
+        tipslayer = layer.tips('上传', '#selectpcdata', {
+            tips: [2, '#78BA32']
+        });
+    }
+});
+$("#selectpcdata").on("mouseleave", function () {
+    if (tipslayer != -1) {
+        layer.close(tipslayer);
+        tipslayer = -1;
+    }
+});
+
+layui.use('upload', function () {
+    var $ = layui.jquery
+        , upload = layui.upload;
+
+    //选完文件后不自动上传
+    upload.render({
+
+        elem: '#selectpcdata'
+        , url: servicesurl + "/api/PointCloudUpload/UploadData", type: "put" //改成您自己的上传接口
+        , auto: false
+        , accept: 'file'                  //上传文件类型
+        , bindAction: '#startupload'
+        , done: function (res) {
+            if (res.code == 1) {
+                layer.msg('点云上传成功');
+            }
+            else {
+                layer.msg('上传失败，请重试！！！');
+            }
+
+
+        }, datatype: "json"
+    });
+
+});
