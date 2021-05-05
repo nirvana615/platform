@@ -29,6 +29,10 @@ namespace MODEL
         /// </summary>
         public MonitorLayer MonitorLayer { get; set; }
 
+        /// <summary>
+        /// 消落带图层
+        /// </summary>
+        public FlzDataLayer FlzDataLayer { get; set; }
 
 
         /*

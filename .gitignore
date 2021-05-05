@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 /MODEL/app.config
 /MODEL/packages.config
+/MVC/Data/SurModel/XLD_2017

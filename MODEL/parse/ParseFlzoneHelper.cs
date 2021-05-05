@@ -53,7 +53,42 @@ namespace MODEL
                     ZXWD = Convert.ToDouble(row[11].ToString()),
                     FZR = row[8].ToString(),
                     modelId = row[9].ToString(),
-                    XMKSSJ = row[14].ToString()
+                    XMKSSJ = row[14].ToString(),
+                    mianJi = row[15].ToString(),
+                    zhongChang = row[16].ToString(),
+                    tiJi = row[17].ToString(),
+                    puoXiang = row[18].ToString(),
+                    hygc = row[19].ToString(),
+                    gshd = row[20].ToString(),
+                    dcyx = row[21].ToString(),
+                    ytjg = row[22].ToString(),
+                    yccz = row[23].ToString(),
+                    apjg = row[24].ToString(),
+                    qglx = row[25].ToString(),
+                    dmbj = row[26].ToString(),
+                    bxjx = row[27].ToString(),
+                    ytlh = row[28].ToString(),
+                    zbfg = row[29].ToString(),
+                    dcyxScore = row[30].ToString(),
+                    ytjgScore = row[31].ToString(),
+                    ycczScore = row[32].ToString(),
+                    apjgScore = row[33].ToString(),
+                    qglxScore = row[34].ToString(),
+                    dmbjScore = row[35].ToString(),
+                    bxjxScore = row[36].ToString(),
+                    ytlhScore = row[37].ToString(),
+                    zbfgScore = row[38].ToString(),
+                    dcyxWeight = row[39].ToString(),
+                    ytjgWeight = row[40].ToString(),
+                    ycczWeight = row[41].ToString(),
+                    apjgWeight = row[42].ToString(),
+                    qglxWeight = row[43].ToString(),
+                    dmbjWeight = row[44].ToString(),
+                    bxjxWeight = row[45].ToString(),
+                    ytlhWeight = row[46].ToString(),
+                    zbfgWeight = row[47].ToString(),
+                    flzRange = row[48].ToString(),
+                    projectScore = row[49].ToString()
 
 
                 };
@@ -97,6 +132,18 @@ namespace MODEL
                     name = row[4].ToString(),
                     remarks = row[5].ToString(),
                     src = row[6].ToString(),
+                    inclination = row[7].ToString(),
+                    dipAngle = row[8].ToString(),
+                    trend = row[9].ToString(),
+                    traceLength = row[10].ToString(),
+                    avgOpening = row[11].ToString(),
+                    creatTime = row[12].ToString(),
+                    modleTime = row[13].ToString(),
+                    windowId = row[14].ToString(),
+                    measure = row[15].ToString(),
+                    modleId = row[16].ToString(),
+                    collector = row[17].ToString(),
+                    
 
 
                 };
@@ -108,6 +155,58 @@ namespace MODEL
                 return null;
             }
         }
+        /// <summary>
+        /// 侧窗信息
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public static FlzWindowInfo ParseFlzWindowInfo(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("解析flz_Window_Info数据为空！");
+                return null;
+            }
 
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                if (rows.Length != 1)
+                {
+                    logger.Warn("Project不唯一！");
+                    return null;
+                }
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                FlzWindowInfo flzWindowInfo = new FlzWindowInfo()
+                {
+                    id = Convert.ToInt32(row[0].ToString()),
+                    projectId = Convert.ToInt32(row[4].ToString()),
+                    points = row[2].ToString(),
+                    name = row[1].ToString(),
+                    remarks = row[5].ToString(),
+                    sideLength = row[6].ToString(),
+                    creatTime = row[3].ToString(),
+                    sidebLength = row[7].ToString(),
+                    axisx = row[8].ToString(),
+                    axisy = row[9].ToString(),
+                    normal = row[10].ToString(),
+                    origin = row[11].ToString(),
+                    vertices2d = row[12].ToString(),
+                    vertices3d = row[13].ToString(),
+                    vertices3dlbh = row[14].ToString(),
+                    level = row[15].ToString(),
+                    vertical = row[16].ToString(),
+                    height = row[17].ToString(),
+
+                };
+                return flzWindowInfo;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Project解析失败：" + data, ex);
+                return null;
+            }
+        }
     }
 }

@@ -1,14 +1,16 @@
 ﻿//弹出项目列表widget
-layer.open({
+var projectLists = [];//项目列表信息
+var projectindex=layer.open({
     type: 1
-    , title: ['项目列表', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
-    , area: ['350px', '450px']
+    , title: ['斜坡单元', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+    , area: ['300px','300px']
     , shade: 0
-    , offset: ['60px', '10px']
+    , offset: ['260px', '260px']//头部，左边
     , closeBtn: 0
+    , shift:3
     , maxmin: true
     , moveOut: true
-    , content: '<!--工具栏--><div class="layui-row" style="position:absolute;top:5px;width:100%"><!--搜索--><div class="layui-col-md9" style="width:85%"><div class="grid-demo grid-demo-bg1"><i class="layui-icon layui-icon-search" style="position:absolute;left:5px;top:5px;font-size:20px"></i><input type="text" id="projectfilter" lay-verify="title" autocomplete="off" placeholder="搜索" class="layui-input" style="left:30px;height:30px;padding-left:35px;border-radius:5px" /></div></div><!--创建项目--><div class="layui-col-md3" style="width:15%"><div class="grid-demo"><button id="projectadd" type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="border-style:hidden;float:right"><i class="layui-icon layui-icon-add-circle" style="margin-right:0px"></i></button></div></div></div><!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:30px"><!--选项卡--><ul class="layui-tab-title"><li class="layui-this" style="width:40%;padding-top: 10px;">地区</li><li style="width:40%;padding-top: 10px;">时间</li></ul><!--tree--><div class="layui-tab-content"><div class="layui-tab-item layui-show" id="projectbyarea"></div><div class="layui-tab-item" id="projectbytime"></div></div></div>'
+    , content: '<!--工具栏--><div class="layui-row" style="position:absolute;top:5px;width:100%"><!--搜索--><div class="layui-col-md9" style="width:60%"><div class="grid-demo grid-demo-bg1"><button id="projectList" type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="margin-left: 30px;font-size:16px;background-color: #009688;color: #fff"> 查看列表 </button></div></div><!--创建项目--><div class="layui-col-md3" style="width:40%"><div class="grid-demo"><button id="projectadd" type="button" class="layui-btn layui-btn-primary layui-btn-sm" style="border-style:hidden;float:right"><i class="layui-icon layui-icon-add-circle" style="margin-right:0px"></i></button></div></div></div><!--项目列表--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:40px"><!--选项卡--><ul class="layui-tab-title"><li class="layui-this" style="width:40%;padding-top: 10px;">地区</li><li style="width:40%;padding-top: 10px;">时间</li></ul><!--tree--><div class="layui-tab-content"><div class="layui-tab-item layui-show" id="projectbyarea"></div><div class="layui-tab-item" id="projectbytime"></div></div></div>'
     , zIndex: layer.zIndex
     , success: function (layero) {
         layer.setTop(layero);
@@ -22,6 +24,7 @@ var projectdatagrouparea = [];//按地区组织
 
 //获取项目列表
 function GetUserProjects() {
+    console.log(layer);
     $.ajax({
         url: servicesurl + "/api/Flz/GetUserFlzProjectList", type: "get", data: { "cookie": document.cookie },
         success: function (data) {
@@ -34,7 +37,7 @@ function GetUserProjects() {
                 document.getElementById("projectbytime").innerHTML = "";
                 document.getElementById("projectbyarea").innerHTML = "";
                 var projectlist = JSON.parse(data);
-
+                projectLists = projectlist;//展示一下项目列表。
                 //构造项目列表数据
                 projectdatagrouptime = [];      //按时间组织
                 projectdatagrouparea = [];      //按地区组织
@@ -242,7 +245,7 @@ function ProjectNodeClick(obj) {
                 document.getElementById("currentproject").innerHTML = "<option>" + JSON.stringify(obj.data.xmmc).replace(/\"/g, "") + "</option><option>清除当前项目</option>";
 
                 //TODO请求项目相关信息（图层、监测点）
-                GetProjectMonitor(currentprojectid);
+                //GetProjectMonitor(currentprojectid);
 
 
                 //监听清除当前项目操作
@@ -279,7 +282,8 @@ function ProjectNodeClick(obj) {
                 //清除entity
                 viewer.entities.removeAll();
                 CloseAllLayer();
-
+                windowInfoList = [];//测区数据
+                modleInfoList = [];//模型数据
                 //添加及定位entity
                 if ((projectentity != null) && (projectentitylabel != null)) {
                     viewer.entities.add(projectentity);
@@ -287,9 +291,16 @@ function ProjectNodeClick(obj) {
 
                     viewer.flyTo([projectentity, projectentitylabel], { duration: 5, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-80), 3000) });
                 }
+                //直接请求图层出来了
+                
+                setTimeout(() => {
+                    LoadLayerListLayer(currentprojectid);
+                }, 1000);
+                
 
             }
 
+            layer.min(projectindex)
             layer.close(index);
         });
     }
@@ -324,39 +335,40 @@ function ProjectNodeOperate(obj) {
     } else if (obj.type === 'del') {
         //删除项目
         $.ajax({
-            url: servicesurl + "/api/Project/DeleteProject", type: "delete", data: { "id": obj.data.id, "cookie": document.cookie },
+            url: servicesurl + "/api/FLZ/DeleteProject", type: "delete", data: { "id": obj.data.id, "cookie": document.cookie },
             success: function (data) {
                 layer.msg(data, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-
-
-                if ((currentprojectid == null) || (obj.data.id != currentprojectid)) {
-                    for (var i in projectentities) {
-                        if ((projectentities[i].id == "PROJECTCENTER_" + obj.data.id) || (projectentities[i].id == "PROJECTCENTER_" + obj.data.id + "_LABEL")) {
-                            if (viewer.entities.contains(projectentities[i])) {
-                                viewer.entities.remove(projectentities[i]);
+                if (data == "删除成功") {
+                    if ((currentprojectid == null) || (obj.data.id != currentprojectid)) {
+                        for (var i in projectentities) {
+                            if ((projectentities[i].id == "PROJECTCENTER_" + obj.data.id)) {
+                                if (viewer.entities.contains(projectentities[i])) {
+                                    viewer.entities.remove(projectentities[i]);
+                                }
                             }
-
-                            projectentities.remove(projectentities[i]);
                         }
-                    }
-                }
-                else {
-                    document.getElementById("currentproject").innerHTML = "";
-                    document.getElementById("currentproject").style.visibility = "hidden";
-                    currentprojectid = null;
-
-                    CloseAllLayer();                               //关闭弹出图层
-                    viewer.entities.removeAll();
-
-                    for (var i in projectentities) {
-                        if ((projectentities[i].id == "PROJECTCENTER_" + obj.data.id) || (projectentities[i].id == "PROJECTCENTER_" + obj.data.id + "_LABEL")) {
-                            projectentities.remove(projectentities[i]);
+                        for (var i in projectentities) {
+                            if ((projectentities[i].id == "PROJECTCENTER_" + obj.data.id + "_LABEL")) {
+                                if (viewer.entities.contains(projectentities[i])) {
+                                    viewer.entities.remove(projectentities[i]);
+                                }
+                            }
                         }
+                       // AddEntitiesInViewer(projectentities);
                     }
+                    else {
+                        document.getElementById("currentproject").innerHTML = "";
+                        document.getElementById("currentproject").style.visibility = "hidden";
+                        currentprojectid = null;
+                        CloseAllLayer();                               //关闭弹出图层
+                        viewer.entities.removeAll();
+                       // AddEntitiesInViewer(projectentities);
+                    }
+                    GetUserProjects();
 
-                    AddEntitiesInViewer(projectentities);
-                }
-
+                  
+                } 
+                
             }, datatype: "json"
         });
     };
@@ -432,7 +444,115 @@ $(document).keydown(function (e) {
 });
 
 
-//创建项目
+//弹出项目总列表信息
+$("#projectList").on("click", function () {
+    console.log(projectLists);
+    //项目列表
+    if (((projectlistviewlayerindex == null))) {
+        projectlistviewlayerindex = layer.open({
+            type: 1
+            , title: ['项目信息', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+            , area: ['900px', '700px']
+            , shade: 0
+            , offset: 'auto'
+            , closeBtn: 1
+            , anim: 0
+            , maxmin: true
+            , moveOut: true
+            //, content: '<!--查看项目--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin:0px 0px"><ul class="layui-tab-title"><li class="layui-this">基本信息</li><li>测窗信息</li><li>节理信息</li><li>节理玫瑰花</li></ul><div class="layui-tab-content" style="margin:0px 0px"><!--基本信息--><div class="layui-tab-item layui-show"><form class="layui-form" style="margin-top:0px" lay-filter="projectinfoviewform"><div class="layui-form-item"><label class="layui-form-label">项目名称</label><div class="layui-input-block"><input type="text" name="xmmc" class="layui-input" readonly="readonly" /></div></div><div class="layui-form-item"><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">中心经度</label><div class="layui-input-block"><input type="text" name="zxjd" class="layui-input" readonly="readonly" /></div></div></div><div class="layui-col-md6"><div class="grid-demo"><label class="layui-form-label">中心纬度</label><div class="layui-input-block"><input type="text" name="zxwd" class="layui-input" readonly="readonly" /></div></div></div></div></div><div class="layui-form-item"><div class="layui-row"><div class="layui-col-md3"><div class="grid-demo"><label class="layui-form-label">行政区划</label><div class="layui-input-block"><input type="text" name="xzqdm" class="layui-input" readonly="readonly" /></div></div></div><div class="layui-col-md9"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">项目位置</label><div class="layui-input-block"><input type="text" name="xmwz" class="layui-input" readonly="readonly" /></div></div></div></div></div><div class="layui-form-item"><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">开始时间</label><div class="layui-input-block"><input type="text" name="xmkssj" class="layui-input" readonly="readonly" /></div></div></div><div class="layui-col-md6"><div class="grid-demo"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" name="bz" class="layui-input" readonly="readonly" /></div></div></div></div></div></form></div><!--测窗信息--><div class="layui-tab-item"><table class="layui-hide" id="windowtable-view" lay-filter="windowtable-view"></table></div><!--节理信息--><div class="layui-tab-item"><table class="layui-hide" id="jielitable-view" lay-filter="jielitable-view"></table></div><!--节理玫瑰花--><div class="layui-tab-item"><div id="autodatachart" class="layui-tab-item layui-show" style="width:790px;height:540px;top:40px"></div></div></div></div>'
+            , content: '<table class="layui-hide" id="projecttable-view" lay-filter="projecttable-view"></table>'
+            , zIndex: layer.zIndex
+            , success: function (layero) {
+                layer.setTop(layero);
+                form.render();
+            }
+            , end: function () {
+                projectlistviewlayerindex = null;
+            }
+        });
+        //项目列表信息
+        var projecttabledata = projectLists;
+        var projecttableview = table.render({
+            elem: '#projecttable-view'
+            , id: 'projecttableviewid'
+            , title: '测窗信息'
+            , skin: 'line'
+            , even: false
+            , page: true
+            , limit: 10
+            , toolbar: true
+            , totalRow: false
+            , initSort: { field: 'id', type: 'asc' }
+            , cols: [[
+                { field: 'Id', title: 'ID', hide: true }
+                , { field: 'XMMC', title: '项目名称', edit: 'text', width: 200, align: "center" }
+                , { field: 'XMWZ', title: '项目位置', edit: 'text', width: 160, align: "center" }
+                , { field: 'projectScore', title: '项目得分', sort: true, width: 160, align: "center" }
+                , { field: 'dcyx', title: '地层岩性', width: 160, align: "center" }
+                , { field: 'dcyxScore', title: '得分', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'dcyxWeight', title: '权重', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'ytjg', title: '岩体结构', width: 160, align: "center" }
+                , { field: 'ytjgScore', title: '得分', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'ytjgWeight', title: '权重', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'yccz', title: '岩层产状', width: 160, align: "center" }
+                , { field: 'ycczScore', title: '得分', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'ycczWeight', title: '权重', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'apjg', title: '岸坡结构', width: 160, align: "center" }
+                , { field: 'apjgScore', title: '得分', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'apjgWeight', title: '权重', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'qglx', title: '切割裂隙', width: 160, align: "center" }
+                , { field: 'qglxScore', title: '得分', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'qglxWeight', title: '权重', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'dmbj', title: '地貌边界', width: 160, align: "center" }
+                , { field: 'dmbjScore', title: '得分', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'dmbjWeight', title: '权重', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'bxjx', title: '变形迹象', width: 160, align: "center" }
+                , { field: 'bxjxScore', title: '得分', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'bxjxWeight', title: '权重', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'ytlh', title: '岩体裂化', width: 160, align: "center" }
+                , { field: 'ytlhScore', title: '得分', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'ytlhWeight', title: '权重', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'zbfg', title: '植被覆盖', width: 160, align: "center" }
+                , { field: 'zbfgScore', title: '得分', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'zbfgWeight', title: '权重', edit: 'text', sort: true, width: 120, align: "center" }
+                , { field: 'ZXJD', title: '中心经度',   width: 160, align: "center", hide: true  }
+                , { field: 'ZXWD', title: '中心纬度',  width: 160, align: "center", hide: true }
+                , { field: 'CJSJ', title: '创建时间', width: 200, align: "center" }
+                , { field: 'FZR', title: '负责人',   width: 160, align: "center" }
+                , { field: 'BZ', title: '备注',   width: 160, align: "center" }
+            ]]
+            , data: []
+        });
+        //监听单元格编辑
+        table.on('edit(projecttable-view)', function (obj) {
+            console.log(obj)
+            var value = obj.value; //得到修改后的值
+            var data = obj.data; //得到所在行所有键值
+            var field = obj.field; //得到字段
+            obj.data.BZ = "hrihri ";
+            console.log(value);
+            console.log(data);
+            console.log(field);
+            for (var i in projecttabledata) {
+                if (projecttabledata[i].Id == data.Id) {
+                    projecttabledata[i].BZ = "hrihri ";//是不是改变
+                    projecttableview.reload({ id: 'projecttableviewid', data: projecttabledata });
+                }
+            }
+            layer.msg('[ID: ' + data.Id + '] ' + field + ' 字段更改为：' + value, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+        });
+        if (projecttabledata.length>0) {
+            projecttableview.reload({ id: 'projecttableviewid', data: projecttabledata });
+        } else {
+            projecttableview.reload({ id: 'projecttableviewid', data: projecttabledata });
+        }
+        
+       
+    }
+    
+}); 
+//
+
 $("#projectadd").on("click", function () {
     //创建项目
     if (((projectinfoviewlayerindex == null) && (projectinfoeditlayerindex == null))) {
@@ -445,7 +565,7 @@ $("#projectadd").on("click", function () {
             layer.close(index);
         });
     }
-});
+}); 
 
 //提示
 $("#projectadd").on("mouseenter", function () {
@@ -463,187 +583,3 @@ $("#projectadd").on("mouseleave", function () {
 });
 
 
-//获取项目监测点树
-function GetProjectMonitor(projectid) {
-    currentprojectmonitors = [];
-    currentprojectfristmonitor = null;
-
-    $.ajax({
-        url: servicesurl + "/api/Monitor/GetMonitor", type: "get", data: { "id": projectid, "cookie": document.cookie },
-        success: function (data) {
-            var monitorinfos = JSON.parse(data);
-
-            var disasterinfo = [];//灾害体
-            var methodinfo = [];//监测方法
-            var sectioninfo = [];//监测剖面
-
-            //获取灾害体、监测方法、监测剖面
-            for (var i in monitorinfos) {
-                if (monitorinfos[i].DisasterString != null) {
-                    if (disasterinfo.length != 0) {
-                        var isin = false;
-                        for (var j in disasterinfo) {
-                            if (disasterinfo[j].id == monitorinfos[i].DisasterString.Id) {
-                                isin = true;
-                                break;
-                            }
-                        }
-
-                        if (!isin) {
-                            var di = new Object;
-                            di.title = monitorinfos[i].DisasterString.ZHTBH;
-                            di.id = monitorinfos[i].DisasterString.Id;
-                            di.checked = false;
-                            disasterinfo.push(di);
-                        }
-                    }
-                    else {
-                        var di = new Object;
-                        di.title = monitorinfos[i].DisasterString.ZHTBH;
-                        di.id = monitorinfos[i].DisasterString.Id;
-                        di.checked = false;
-                        disasterinfo.push(di);
-                    }
-                }
-
-                if (monitorinfos[i].SectionString != null) {
-                    if (sectioninfo.length != 0) {
-                        var isin = false;
-                        for (var j in sectioninfo) {
-                            if (sectioninfo[j].id == monitorinfos[i].SectionString.Id) {
-                                isin = true;
-                                break;
-                            }
-                        }
-
-                        if (!isin) {
-                            var si = new Object;
-                            si.title = monitorinfos[i].SectionString.PMBH;
-                            si.id = monitorinfos[i].SectionString.Id;
-                            si.checked = false;
-                            sectioninfo.push(si);
-                        }
-                    }
-                    else {
-                        var si = new Object;
-                        si.title = monitorinfos[i].SectionString.PMBH;
-                        si.id = monitorinfos[i].SectionString.Id;
-                        si.checked = false;
-                        sectioninfo.push(si);
-                    }
-                }
-
-                if (monitorinfos[i].MonitorString != null) {
-                    if (methodinfo.length != 0) {
-                        var isin = false;
-                        for (var j in methodinfo) {
-                            if (methodinfo[j].title == monitorinfos[i].MonitorString.JCFF) {
-                                isin = true;
-                                break;
-                            }
-                        }
-
-                        if (!isin) {
-                            var mi = new Object;
-                            mi.title = monitorinfos[i].MonitorString.JCFF;
-                            mi.id = monitorinfos[i].MonitorString.Id;
-                            mi.checked = false;
-                            if (monitorinfos[i].MonitorString.JCFF != "声光预警") {
-                                methodinfo.push(mi);
-                            }
-                        }
-                    }
-                    else {
-                        var mi = new Object;
-                        mi.title = monitorinfos[i].MonitorString.JCFF;
-                        mi.id = monitorinfos[i].MonitorString.Id;
-                        mi.checked = false;
-                        if (monitorinfos[i].MonitorString.JCFF != "声光预警") {
-                            methodinfo.push(mi);
-                        }
-                    }
-                }
-            }
-
-            disasterinfo.sort();
-            methodinfo.sort();
-            sectioninfo.sort();
-
-            //按不同分类组合监测点
-            for (var i in monitorinfos) {
-                if (monitorinfos[i].MonitorString.JCZLX != "GNSS基准站") {
-                    if (monitorinfos[i].MonitorString != null) {
-                        var mi = new Object;
-                        mi.title = monitorinfos[i].MonitorString.JCDBH;
-                        mi.id = monitorinfos[i].MonitorString.Id;
-                        mi.type = monitorinfos[i].MonitorString.JCFF;//监测方法
-
-                        if (monitorinfos[i].DisasterString != null) {
-                            for (var j in disasterinfo) {
-                                if (monitorinfos[i].DisasterString.Id == disasterinfo[j].id) {
-                                    if (disasterinfo[j].children == null) {
-                                        var child = [];
-                                        child.push(mi);
-                                        disasterinfo[j].children = child;
-                                        if (j == 0) {
-                                            disasterinfo[j].spread = true;
-                                            currentprojectfristmonitor = mi;
-                                        }
-                                    }
-                                    else {
-                                        disasterinfo[j].children.push(mi);
-                                    }
-                                }
-                            }
-                        }
-
-                        if (monitorinfos[i].SectionString != null) {
-                            for (var j in sectioninfo) {
-                                if (monitorinfos[i].SectionString.Id == sectioninfo[j].id) {
-                                    if (sectioninfo[j].children == null) {
-                                        var child = [];
-                                        child.push(mi);
-                                        sectioninfo[j].children = child;
-                                    }
-                                    else {
-                                        sectioninfo[j].children.push(mi);
-                                    }
-                                }
-                            }
-                        }
-
-                        for (var j in methodinfo) {
-                            if (monitorinfos[i].MonitorString.JCFF == methodinfo[j].title) {
-                                if (methodinfo[j].children == null) {
-                                    var child = [];
-                                    child.push(mi);
-                                    methodinfo[j].children = child;
-                                }
-                                else {
-                                    methodinfo[j].children.push(mi);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            //按灾害体构建监测点树
-            var monitorbydisaster = new Object;
-            monitorbydisaster.title = "按灾害体分类";
-            monitorbydisaster.children = disasterinfo;
-            monitorbydisaster.spread = true;
-            currentprojectmonitors.push(monitorbydisaster);
-            //按监测方法构建监测点树
-            var monitorbymethod = new Object;
-            monitorbymethod.title = "按监测方法分类";
-            monitorbymethod.children = methodinfo;
-            currentprojectmonitors.push(monitorbymethod);
-            //按监测剖面构建监测点树
-            var monitorbysection = new Object;
-            monitorbysection.title = "按监测剖面分类";
-            monitorbysection.children = sectioninfo;
-            currentprojectmonitors.push(monitorbysection);
-        }, datatype: "json"
-    });
-};
