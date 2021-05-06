@@ -1,268 +1,574 @@
-﻿var projectdevicechartcount = null;
-var projectdevicechartdisaster = null;
-var projectdevicecharttype = null;
-var monitordevicechart = null;
+﻿// 节理查看
+var jielicSee = "	<form class='layui-form' style='margin-top:5px;margin-right:25px;' lay-filter='addpointinfoform'>	"
+    + "	    <div class='layui-form-item'>	"
+    + "	        <div class='layui-row'>	"
+    + "	            <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>节理名称</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='name' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo'>	"
+    + "	                    <label class='layui-form-label'>平均张开度</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='avgOpening' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>备注</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='remarks' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	        </div>	"
+    + "	    </div>	"
+    + "	    <div class='layui-form-item'>	"
+    + "	        <div class='layui-row'>	"
+    + "	            <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>迹长</label><div class='layui-input-block'>	"
+    + "	                        <input type='text' name='traceLength' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div><div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo'>	"
+    + "	                    <label class='layui-form-label'>面积</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='measure' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>采集时间</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='modleTime' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	        </div>	"
+    + "	    </div><div class='layui-form-item'>	"
+    + "	        <div class='layui-row'>	"
+    + "	            <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>素描时间</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='creatTime' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>采集人</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='collector' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	        </div>	"
+    + "	    </div>	"
+    + "	</form>	";
 
-var currentdevicemonitor = null;//当前设备
+//结构面查看
+var jiegouimianSee = "	<form class='layui-form' style='margin-top:5px;margin-right:25px;' lay-filter='seepointinfoform'>	"
+    + "	    <div class='layui-form-item'>	"
+    + "	        <div class='layui-row'>	"
+    + "	            <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>节理名称</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='name' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo'>	"
+    + "	                    <label class='layui-form-label'>采集人</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='collector' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>备注</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='remarks' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	        </div>	"
+    + "	    </div>	"
+    + "	    <div class='layui-form-item'>	"
+    + "	        <div class='layui-row'>	"
+    + "	            <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>倾向</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='inclination' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo'>	"
+    + "	                    <label class='layui-form-label'>倾角</label>	"
+    + "	                    <div class='layui-input-block'><input type='text' name='dipAngle' class='layui-input' readonly='readonly' /></div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>走向</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='trend' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	        </div>	"
+    + "	    </div>"
+    + "	    <div class='layui-form-item'>	"
+    + "	        <div class='layui-row'>	"
+    + "	 	        <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>采集时间</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='modleTime' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md4'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>素描时间</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='creatTime' class='layui-input' readonly='readonly' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	        </div>	"
+    + "	    </div>	"
+    + "	</form>	";
+//节理修改
+var jieliupd = "	<form class='layui-form' style='margin-top:5px;margin-right:25px;' lay-filter='updpointinfoform'>	"
+    + "	    <div class='layui-form-item' style='margin-top:15px;margin-right:5px;'>	"
+    + "	        <div class='layui-row'>	"
+    + "	            <div class='layui-col-md6'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>名称</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='name' lay-verify='required' autocomplete='off' placeholder='请输入' class='layui-input' style='width:160px;' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md6' style='margin-top:15px;margin-right:5px;'>	"
+    + "	                <div class='grid-demo'>	"
+    + "	                    <label class='layui-form-label'>平均张开度</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='avgOpening' lay-verify='required' autocomplete='off' placeholder='请输入' class='layui-input' style='width:160px;' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md6' style='margin-top:15px;margin-right:5px;'>	"
+    + "	                <div class='grid-demo'>	"
+    + "	                    <label class='layui-form-label'>描述</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='remarks' lay-verify='required' autocomplete='off' placeholder='请输入' class='layui-input' style='width:160px;' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	        </div>	"
+    + "	    </div>	"
+    + "	    <div class='layui-form-item' style='margin-top:15px'>	"
+    + "	        <div style='position:absolute;right:15px;'>	"
+    + "	            <button type='reset' class='layui-btn layui-btn-primary' style='width:100px'>重置</button>	"
+    + "	            <button type='submit' class='layui-btn' lay-submit='' lay-filter='updpointinfosubmit' style='width:100px'>提交</button>	"
+    + "	        </div>	"
+    + "	    </div>	"
+    + "	</form>	";
+//节狗修改
+var jiegouupd = "	<form class='layui-form' style='margin-top:5px;margin-right:25px;' lay-filter='updpointinfoform'>	"
+    + "	    <div class='layui-form-item' style='margin-top:15px;margin-right:5px;'>	"
+    + "	        <div class='layui-row'>	"
+    + "	            <div class='layui-col-md6'>	"
+    + "	                <div class='grid-demo grid-demo-bg1'>	"
+    + "	                    <label class='layui-form-label'>名称</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='name' lay-verify='required' autocomplete='off' placeholder='请输入' class='layui-input' style='width:160px;' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	            <div class='layui-col-md6' style='margin-top:15px;margin-right:5px;'>	"
+    + "	                <div class='grid-demo'>	"
+    + "	                    <label class='layui-form-label'>描述</label>	"
+    + "	                    <div class='layui-input-block'>	"
+    + "	                        <input type='text' name='remarks' lay-verify='required' autocomplete='off' placeholder='请输入' class='layui-input' style='width:160px;' />	"
+    + "	                    </div>	"
+    + "	                </div>	"
+    + "	            </div>	"
+    + "	        </div>	"
+    + "	    </div>	"
+    + "	    <div class='layui-form-item' style='margin-top:15px'>	"
+    + "	        <div style='position:absolute;right:15px;'>	"
+    + "	            <button type='reset' class='layui-btn layui-btn-primary' style='width:100px'>重置</button>	"
+    + "	            <button type='submit' class='layui-btn' lay-submit='' lay-filter='updpointinfosubmit' style='width:100px'>提交</button>	"
+    + "	        </div>	"
+    + "	    </div>	"
+    + "	</form>	";
 
-
-//自动化监测设备widget
-function LoadAutoDeviceLayer(projectid) {
-    if (projectid == null) {
-        layer.msg("请先选择当前项目！", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-    }
-    else {
-        if (automonitordevicelayerindex == null) {
-            automonitordevicelayerindex = layer.open({
+//查看点信息
+var drwInfox = null;
+function DrwInfo(data,flag) {
+   
+    console.log(data);
+    if (flag == "view") {
+        if (data.data.type == "FLZPOINT") {
+          drwInfox = layer.open({
                 type: 1
-                , title: ['自动化监测设备管理', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
-                , area: ['1000px', '800px']
-                , shade: 0
+                , title: ['点信息查看', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: ['300px', '400px']
+                , shade: 0.3
                 , offset: 'auto'
                 , closeBtn: 1
                 , maxmin: true
                 , moveOut: true
-                , content: '<!--设备管理--><div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" style="margin-top:0px"><ul class="layui-tab-title"><li class="layui-this" style="width:40%;padding-top: 10px;">概况</li><li style="width:40%;padding-top: 10px;">详情</li></ul><div class="layui-tab-content"><!--概况--><div class="layui-tab-item layui-show"><form class="layui-form" lay-filter="autodevicesform" style="margin-top:5px;"><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><div class="layui-input-block" style="margin-left:10px;"><select id="autodevicespretimeid" name="autodevicespretime" lay-filter="autodevicespretimefilter" style="visibility:visible;"></select></div></div></div></div><div class="layui-col-xs6"><div class="grid-demo"><div class="layui-form-item"><div class="layui-input-block" style="margin-left:10px;margin-right:10px;"><input id="autodevicescustomtimeid" name="autodevicescustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;"></div></div></div></div></div></form><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1">1</div></div><div class="layui-col-xs6"><div class="grid-demo"><!--设备数量--><div id="autodevicechartbynum" class="layui-tab-item layui-show" style="width:350px;height:300px"></div></div></div></div><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1"><!--按灾害体--><div id="autodevicechartbydisaster" class="layui-tab-item layui-show" style="width:350px;height:300px"></div></div></div><div class="layui-col-xs6"><div class="grid-demo"><!--按设备类型--><div id="autodevicechartbytype" class="layui-tab-item layui-show" style="width:350px;height:300px"></div></div></div></div></div><!--详情--><div class="layui-tab-item"><div class="layui-row"><!--左侧--><div class="layui-col-md3" style="width:20%;height:500px;overflow: auto;"><div id="device-monitor-tree" class="grid-demo"></div></div><!--右侧--><div class="layui-col-md9" style="width:80%;height:300px;border-left:solid;border-color:#e6e6e6;border-left-width:0px;"><div class="grid-demo grid-demo-bg1"><!--工具栏--><form class="layui-form" lay-filter="autodeviceform" style="margin-top:5px;"><div class="layui-row"><div class="layui-col-xs6"><div class="grid-demo grid-demo-bg1"><div class="layui-form-item"><div class="layui-input-block" style="margin-left:10px;"><select id="autodevicepretimeid" name="autodevicepretime" lay-filter="autodevicepretimefilter" style="visibility:visible;"></select></div></div></div></div><div class="layui-col-xs6"><div class="grid-demo"><div class="layui-form-item"><div class="layui-input-block" style="margin-left:10px;margin-right:10px;"><input id="autodevicecustomtimeid" name="autodevicecustomtime" type="text" class="layui-input" placeholder="开始时间 — 结束时间" style="visibility:visible;"></div></div></div></div></div></form><!--采集数量柱状图--><div id="autodevicechart" class="layui-tab-item layui-show" style="width:780px;height:600px"></div><!--设备采集率--><div style="padding-left:50px;padding-right:10px;padding-top:20px;"><div class="layui-progress layui-progress" lay-showpercent="true" lay-filter="devicerate"><div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div></div></div></div></div></div></div></div></div>'
+                , content: '<form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="addpointinfoform"><div class="layui-form-item" style="margin-top:15px;margin-right:5px;"><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">点名称</label><div class="layui-input-block"><input type="text" name="name" lay-verify="required" autocomplete="off" readonly="readonly" class="layui-input" style="width:160px;"  /></div></div></div><div class="layui-col-md6" style="margin-top:15px;margin-right:5px;"><div class="grid-demo"><label class="layui-form-label">经度</label><div class="layui-input-block"><input type="text" name="ls" lay-verify="required" autocomplete="off" readonly="readonly"  class="layui-input" style="width:160px;"  /></div></div></div><div class="layui-col-md6" style="margin-top:15px;margin-right:5px;"><div class="grid-demo"><label class="layui-form-label">纬度</label><div class="layui-input-block"><input type="text" name="bs" lay-verify="required" autocomplete="off" readonly="readonly"  class="layui-input" style="width:160px;"  /></div></div></div><div class="layui-col-md6" style="margin-top:15px;margin-right:5px;"><div class="grid-demo"><label class="layui-form-label">高程</label><div class="layui-input-block"><input type="text" name="hs" lay-verify="required" autocomplete="off" readonly="readonly"  class="layui-input" style="width:160px;"  /></div></div></div><div class="layui-col-md6" style="margin-top:15px;margin-right:5px;"><div class="grid-demo"><label class="layui-form-label">描述</label><div class="layui-input-block"><input type="text" name="remarks" lay-verify="required" autocomplete="off" readonly="readonly"  class="layui-input" style="width:160px;"  /></div></div></div></div></div></form>'
                 , zIndex: layer.zIndex
                 , success: function (layero) {
                     layer.setTop(layero);
 
+                    form.val("addpointinfoform", {
+                        "name": data.data.title
+                        , "remarks": data.data.remarks
+                        , "ls": data.data.lbh.ls
+                        , "bs": data.data.lbh.bs
+                        , "hs": data.data.lbh.hs
+                    });
+
+
                     //展示项目设备总览
-                    DisplayProjectDevices();
-                    //展示监测设备详情
-                    DisplayMonitorDevice();
+
                 }
                 , end: function () {
-                    automonitordevicelayerindex = null;
-                    projectdevicechartcount = null;
-                    projectdevicechartdisaster = null;
-                    projectdevicecharttype = null;
-                    monitordevicechart = null;
+
+                }
+            });
+        } else if (data.data.type == "FLZWINDOW") {
+            drwInfox = layer.open({
+                type: 1
+                , title: ['测窗信息查看', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: ['300px', '350px']
+                , shade: 0.3
+                , offset: 'auto'
+                , closeBtn: 1
+                , maxmin: true
+                , moveOut: true
+                , content: '<form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="addpointinfoform"><div class="layui-form-item" style="margin-top:15px;margin-right:5px;"><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">测窗名称</label><div class="layui-input-block"><input type="text" name="name" lay-verify="required" autocomplete="off" readonly="readonly" class="layui-input" style="width:160px;"  /></div></div></div><div class="layui-col-md6" style="margin-top:15px;margin-right:5px;"><div class="grid-demo"><label class="layui-form-label">新建时间</label><div class="layui-input-block"><input type="text" name="creatTime" lay-verify="required" autocomplete="off" readonly="readonly"  class="layui-input" style="width:160px;"  /></div></div></div><div class="layui-col-md6" style="margin-top:15px;margin-right:5px;"><div class="grid-demo"><label class="layui-form-label">测窗大小</label><div class="layui-input-block"><input type="text" name="sideLength" lay-verify="required" autocomplete="off" readonly="readonly"  class="layui-input" style="width:160px;"  /></div></div></div><div class="layui-col-md6" style="margin-top:15px;margin-right:5px;"><div class="grid-demo"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" name="remarks" lay-verify="required" autocomplete="off" readonly="readonly"  class="layui-input" style="width:160px;"  /></div></div></div></div></div></form>'
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    layer.setTop(layero);
+
+                    form.val("addpointinfoform", {
+                          "name": data.data.title
+                        , "remarks": data.data.datas.remarks
+                        , "creatTime": data.data.datas.creatTime
+                        , "sideLength": data.data.datas.sideLength + "*" + data.data.datas.sidebLength
+                    });
+
+
+                    //展示项目设备总览
+
+                }
+                , end: function () {
+
+                }
+            });
+        } else if (data.data.type == "FLZJIELI") {
+            
+            drwInfox = layer.open({
+                type: 1
+                , title: ['节理信息查看', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: ['1000px', '300px']
+                , shade: 0.3
+                , offset: 'auto'
+                , closeBtn: 1
+                , maxmin: true
+                , moveOut: true
+             // , content: '<form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="addpointinfoform"><div class="layui-form-item"><div class="layui-row"><div class="layui-col-md4"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">节理名称</label><div class="layui-input-block"><input type="text" name="name" class="layui-input" readonly="readonly" /></div></div></div><div class="layui-col-md4"><div class="grid-demo"><label class="layui-form-label">平均张开度</label><div class="layui-input-block"><input type="text" name="avgOpening" class="layui-input" readonly="readonly" /></div></div></div><div class="layui-col-md4"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">备注</label><div class="layui-input-block"><input type="text" name="remarks" class="layui-input" readonly="readonly" /></div></div></div></div></div><div class="layui-form-item"><div class="layui-row"><div class="layui-col-md4"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">倾向</label><div class="layui-input-block"><input type="text" name="inclination" class="layui-input" readonly="readonly" /></div></div></div><div class="layui-col-md4"><div class="grid-demo"><label class="layui-form-label">倾角</label><div class="layui-input-block"><input type="text" name="dipAngle" class="layui-input" readonly="readonly" /></div></div></div><div class="layui-col-md4"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">走向</label><div class="layui-input-block"><input type="text" name="trend" class="layui-input" readonly="readonly" /></div></div></div></div></div><div class="layui-form-item"><div class="layui-row"><div class="layui-col-md4"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">迹长</label><div class="layui-input-block"><input type="text" name="traceLength" class="layui-input" readonly="readonly" /></div></div></div><div class="layui-col-md4"><div class="grid-demo"><label class="layui-form-label">面积</label><div class="layui-input-block"><input type="text" name="measure" class="layui-input" readonly="readonly" /></div></div></div><div class="layui-col-md4"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">采集时间</label><div class="layui-input-block"><input type="text" name="modleTime" class="layui-input" readonly="readonly" /></div></div></div></div></div><div class="layui-form-item"><div class="layui-row"><div class="layui-col-md4"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">素描时间</label><div class="layui-input-block"><input type="text" name="creatTime" class="layui-input" readonly="readonly" /></div></div></div></div></div></form>'
+                , content: jielicSee
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    layer.setTop(layero);
+
+                    form.val("addpointinfoform", {
+                        "avgOpening": data.data.datas.avgOpening,// "3"
+                        "creatTime": data.data.datas.creatTime,// "2021-03-23         "
+                        "dipAngle": data.data.datas.dipAngle,// "32.62"
+                        "inclination": data.data.datas.inclination,// "152.30"
+                        "measure": data.data.datas.measure,// "0.095778"
+                        "modleTime": data.data.datas.modleTime,// "2021-03-01
+                        "name": data.data.datas.name,// "测是3"
+                        "remarks": data.data.datas.remarks,// "3233"
+                        "traceLength": data.data.datas.traceLength,// "1.29"
+                        "trend": data.data.datas.trend,// "122.62"
+                        "collector": data.data.datas.collector,// "3"
+                    });
+
+
+                    //展示项目设备总览
+
+                }
+                , end: function () {
+
+                }
+            });
+        } else if (data.data.type == "YOUSHIMIAN") {//优势结构面
+
+            drwInfox = layer.open({
+                type: 1
+                , title: ['结构面信息查看', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: ['1000px', '300px']
+                , shade: 0.3
+                , offset: 'auto'
+                , closeBtn: 1
+                , maxmin: true
+                , moveOut: true
+                 , content: jiegouimianSee
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    layer.setTop(layero);
+
+                    form.val("seepointinfoform", {
+                        "collector": data.data.datas.collector,// "3"
+                        "creatTime": data.data.datas.creatTime,// "2021-03-23         "
+                        "dipAngle": data.data.datas.dipAngle,// "32.62"
+                        "inclination": data.data.datas.inclination,// "152.30"
+                        "modleTime": data.data.datas.modleTime,// "2021-03-01
+                        "name": data.data.datas.name,// "测是3"
+                        "remarks": data.data.datas.remarks,// "3233"
+                        "trend": data.data.datas.trend,// "122.62"
+                    });
+
+
+                    //展示项目设备总览
+
+                }
+                , end: function () {
+
+                }
+            });
+        } else if (data.data.type == "FLZLINE" || data.data.type == "FLZAREA") {
+            drwInfox = layer.open({
+                type: 1
+                , title: ['信息查看', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+                , area: '700px'
+                , shade: 0.3
+                , offset: '60px'
+                , closeBtn: 1
+                , maxmin: true
+                , moveOut: true
+                , content: '<form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="addpointinfoform"><div class="layui-form-item" style="margin-top:15px;margin-right:5px;"><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">点名称</label><div class="layui-input-block"><input type="text" name="name" lay-verify="required" autocomplete="off" readonly="readonly" class="layui-input" style="width:160px;"  /></div></div></div><div class="layui-col-md6" style="margin-top:15px;margin-right:5px;"><div class="grid-demo"><label class="layui-form-label">描述</label><div class="layui-input-block"><input type="text" name="remarks" lay-verify="required" autocomplete="off" readonly="readonly"  class="layui-input" style="width:160px;"  /></div></div></div></div></div></form><div><table class="layui-hide" id="postion-view" lay-filter=postion-view"></table></div>'
+                // , content: '<div><table class="layui-hide" id="postion-view" lay-filter=postion-view"></table></div>'
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    layer.setTop(layero);
+
+                    form.val("addpointinfoform", {
+                        "name": data.data.title
+                        , "remarks": data.data.remarks
+                    });
+                    //展示项目设备总览
+
+                }
+                , end: function () {
+
                 }
             });
         }
+
+        var postionviewtable = table.render({
+            elem: '#postion-view'
+            , id: 'postionviewid'
+            , title: '点位信息'
+            , skin: 'line'
+            , even: false
+            , page: {
+                layout: ['prev', 'page', 'next', 'count']
+            }
+            , limit: 14
+            // , initSort: { field: 'ls', type: 'asc' }
+            , totalRow: false
+            , cols: [[
+                { field: 'ls', title: '经度', align: "center" }
+                , { field: 'bs', title: '纬度', align: "center" }
+                , { field: 'hs', title: '高程', align: "center" }
+            ]]
+            , data: []
+        });
+        postionviewtable.reload({ id: 'postionviewid', data: data.data.pointList });
+    } else if (flag == "update") {
+        if (data.data.type == "FLZWINDOW") {//测窗
+            var temptitle = data.data.title;
+            drwInfox = layer.open({
+                type: 1
+                , title: ['确认修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+                , area: ['300px', '300px']
+                , shade: 0.3
+                , offset: 'auto'
+                , closeBtn: 1
+                , maxmin: true
+                , moveOut: true
+                //, content: '/Apps/flz/widget/addinfoPoint.html'
+                , content: '<form class="layui-form" style="margin-top:5px;margin-right:25px;" lay-filter="addpointinfoform"><div class="layui-form-item" style="margin-top:15px;margin-right:5px;"><div class="layui-row"><div class="layui-col-md6"><div class="grid-demo grid-demo-bg1"><label class="layui-form-label">名称</label><div class="layui-input-block"><input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input" style="width:160px;"  /></div></div></div><div class="layui-col-md6" style="margin-top:15px;margin-right:5px;"><div class="grid-demo"><label class="layui-form-label">描述</label><div class="layui-input-block"><input type="text" name="remarks" lay-verify="required" autocomplete="off" placeholder="请输入"  class="layui-input" style="width:160px;"  /></div></div></div></div></div><div class="layui-form-item" style="margin-top:15px"><div style="position:absolute;right:15px;"><button type="reset" class="layui-btn layui-btn-primary" style="width:100px">重置</button><button type="submit" class="layui-btn" lay-submit="" lay-filter="addpointinfosubmit" style="width:100px">提交</button></div></div></form>'
+                , zIndex: layer.zIndex
+                , success: function (layero) {
+                    //置顶
+                    layer.setTop(layero);
+                    form.render();
+                    form.val("addpointinfoform", {
+                        "name": data.data.title
+                        , "remarks": data.data.datas.remarks
+                    });
+
+                    form.on('submit(addpointinfosubmit)', function (temp) {
+                        data.data.title = temp.field.name;
+                        data.data.remarks = temp.field.remarks;
+                        //tree.reload(data.data.id, { data: data.data });
+
+                        temp.field.id = data.data.id.split("_")[1];//把id往后面传
+                        temp.field.cookie = document.cookie;
+                        console.log(layers);
+                        $.ajax({
+                            url: servicesurl + "/api/FlzWindowInfo/UpdateFlzWindow", type: "post", data: temp.field,
+                            success: function (result) {
+                                //创建失败
+                                layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+
+                                if ("更新成功" == result) {
+                                    for (var i in layers[0].children) {
+                                        if (data.data.id == layers[0].children[i].id) {
+                                            layers[0].children[i].title = temp.field.name;
+                                            layers[0].children[i].remarks = temp.field.remarks;
+                                            layers[0].spread = true;
+                                            layers[0].children[i].spread = true;
+                                            break;
+                                        }
+
+                                    }
+
+                                    tree.reload('prjlayerlistid', { data: layers });
+                                    //关闭,更改图上显示
+                                    if (data.data.checked) {
+                                        var entity = viewer.entities.getById(data.data.id + "_LABEL");
+                                        console.log(entity);
+                                        entity.label.text = entity.label.text._value.replace(temptitle, temp.field.name);
+                                    }
+                                    var entity = viewer.entities.getById(data.id);
+                                    layer.close(drwInfox);
+                                }
+
+                            }, datatype: "json"
+                        });
+                        return false;
+                    });
+
+                }
+                , end: function () {
+                    layer.close(drwInfox);
+                }
+            });
+
+        } else {//最开始的点线面。
+            var temptitle = data.data.title;
+            if (data.data.type == "FLZJIELI" || data.data.type == "YOUSHIMIAN") {//节理信息修改
+                drwInfox = layer.open({
+                    type: 1
+                    , title: ['确认修改', 'font-weight:bold;font-size:large;font-family:	Microsoft YaHei']
+                    , area: ['300px', '300px']
+                    , shade: 0.3
+                    , offset: 'auto'
+                    , closeBtn: 1
+                    , maxmin: true
+                    , moveOut: true
+                    , content: data.data.type == "FLZJIELI" ? jieliupd : jiegouupd
+                    , zIndex: layer.zIndex
+                    , success: function (layero) {
+                        //置顶
+                        layer.setTop(layero);
+                        form.render();
+                        form.val("updpointinfoform", {
+                            "name": data.data.title
+                            , "remarks": data.data.remarks,
+                            "avgOpening": data.data.datas.avgOpening,// "3"
+
+                        });
+
+                        form.on('submit(updpointinfosubmit)', function (temp) {
+                            data.data.title = temp.field.name;
+                            data.data.remarks = temp.field.remarks;
+                            data.data.avgOpening = temp.field.avgOpening;
+                            //tree.reload(data.data.id, { data: data.data });
+
+                            temp.field.id = data.data.id.split("_")[1];//把id往后面传
+                            temp.field.cookie = document.cookie;
+                            console.log(layers);
+                            $.ajax({
+                                url: servicesurl + "/api/FlzData/UpdateFlzPoint", type: "post", data: temp.field,
+                                success: function (result) {
+                                    //创建失败
+                                    layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+
+                                    if ("更新成功" == result) {
+                                            for (var i in layers[0].children) {
+                                                for (var j in layers[0].children[i].children) {
+                                                    if (data.data.id == layers[0].children[i].children[j].id) {
+                                                        layers[0].children[i].children[j].title = temp.field.name;
+                                                        layers[0].children[i].children[j].remarks = temp.field.remarks;
+                                                        layers[0].children[i].children[j].datas.avgOpening = temp.field.avgOpening;
+                                                        layers[0].children[i].children[j].datas.remarks = temp.field.remarks;
+                                                        layers[0].children[i].children[j].datas.name = temp.field.name;
+                                                        layers[0].spread = true;
+                                                        layers[0].children[i].spread = true;
+                                                        layers[0].children[i].children[j].spread = true;
+                                                        console.log(layers[0].children[i].children[j]);
+                                                        break;
+                                                    }
+                                                }
+
+                                            }
+                                        
+
+
+                                        tree.reload('prjlayerlistid', { data: layers });
+                                        //关闭,更改图上显示
+                                        if (data.data.checked) {
+                                            var entity = viewer.entities.getById(data.data.id + "_LABEL");
+                                            console.log(entity);
+                                            entity.label.text = entity.label.text._value.replace(temptitle, temp.field.name);
+
+                                        }
+                                        var entity = viewer.entities.getById(data.id);
+                                        layer.close(drwInfox);
+                                    }
+
+                                }, datatype: "json"
+                            });
+                            return false;
+                        });
+
+                    }
+                    , end: function () {
+                        layer.close(drwInfox);
+                    }
+                });
+            }
+            
+
+        }
+        
     }
 }
 
-function DisplayProjectDevices() {
-    //渲染工具
-    document.getElementById("autodevicespretimeid").style.visibility = "visible";
-    document.getElementById("autodevicescustomtimeid").style.visibility = "visible";
-
-    //预设时间范围
-    if (autodatadatetimes.length > 0) {
-        for (var i in autodatadatetimes) {
-            if (autodatadatetimes[i].name == "前一日") {
-                document.getElementById("autodevicespretimeid").innerHTML += '<option value="' + autodatadatetimes[i].value + '" selected>' + autodatadatetimes[i].name + '</option>';
-            }
-            else {
-                document.getElementById("autodevicespretimeid").innerHTML += '<option value="' + autodatadatetimes[i].value + '">' + autodatadatetimes[i].name + '</option>';
-            }
-        }
-    }
-    //自定义时间范围
-    date.render({
-        elem: '#autodevicescustomtimeid'
-        , type: 'date'
-        , range: true
-        , done: function (value, date, endDate) {
-            if (value != "") {
-                ////按自定义时间范围绘制图表
-                //LoadMonitorAutoDataCustomDateTime(currentmonitor, value);
-            }
-        }
-    });
-
-    form.render();
-    form.render('select');
-
-};
-
-function DisplayMonitorDevice() {
-    //渲染监测点树
-    tree.render({
-        elem: '#device-monitor-tree'
-        , id: 'device-monitor-treeid'
-        , showCheckbox: false
-        , showLine: true
-        , data: currentprojectmonitors
-        , edit: false
-        , accordion: true
-        , click: function (obj) {
-            if ((obj.data.type != null) || (obj.data.type != undefined)) {
-                if (obj.data != currentdevicemonitor) {
-                    currentdevicemonitor = obj.data;
-                    LoadDeviceCountPreDateTime(currentdevicemonitor, form.val("autodeviceform").autodevicepretime);
-                }
-            }
-        }
-    });
-
-    //预设时间范围
-    if (autodatadatetimes.length > 0) {
-        for (var i in autodatadatetimes) {
-            if (autodatadatetimes[i].name == "最近30天") {
-                document.getElementById("autodevicepretimeid").innerHTML += '<option value="' + autodatadatetimes[i].value + '" selected>' + autodatadatetimes[i].name + '</option>';
-            }
-            else {
-                document.getElementById("autodevicepretimeid").innerHTML += '<option value="' + autodatadatetimes[i].value + '">' + autodatadatetimes[i].name + '</option>';
-            }
-        }
-    }
-    //自定义时间范围
-    date.render({
-        elem: '#autodevicecustomtimeid'
-        , type: 'date'
-        , range: true
-        , done: function (value, date, endDate) {
-            if (value != "") {
-                //按自定义时间范围绘制图表
-                LoadDeviceCountCustomDateTime(currentdevicemonitor, value);
-            }
-        }
-    });
-
-    //预设时间范围切换时间
-    form.on('select(autodevicepretimefilter)', function (data) {
-        if (data.value != "") {
-            //按预设时间范围绘制图表
-            LoadDeviceCountPreDateTime(currentdevicemonitor, data.value);
-        }
-    });
-
-    form.render();
-    form.render('select');
-
-    //加载初始监测点数据
-    if (currentprojectfristmonitor != null) {
-        currentdevicemonitor = currentprojectfristmonitor;
-    }
-    LoadDeviceCountPreDateTime(currentdevicemonitor, form.val("autodeviceform").autodevicepretime);
-};
-
-function LoadDeviceCountPreDateTime(monitor, datetime) {
-    monitordevicechart = echarts.init(document.getElementById('autodevicechart'));
-    monitordevicechart.showLoading();
-
-    $.ajax({
-        url: servicesurl + "/api/Device/GetDeviceCountbyPreDateTime", type: "get", data: { "id": monitor.id, "type": monitor.type, "predatetime": datetime, "cookie": document.cookie },
-        success: function (data) {
-            var result = JSON.parse(data);
-            if (result.code == 1) {
-                DisplayDeviceCount(monitor, result.data);
-            }
-            else {
-                monitordevicechart.hideLoading();
-                layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-            }
-        }, datatype: "json"
-    });
-};
-
-function LoadDeviceCountCustomDateTime(monitor, datetime) {
-    monitordevicechart = echarts.init(document.getElementById('autodevicechart'));
-    monitordevicechart.showLoading();
-
-    $.ajax({
-        url: servicesurl + "/api/Device/GetDeviceCountbyCustomDateTime", type: "get", data: { "id": monitor.id, "type": monitor.type, "customdatetime": datetime, "cookie": document.cookie },
-        success: function (data) {
-            var result = JSON.parse(data);
-            if (result.code == 1) {
-                DisplayDeviceCount(monitor, result.data);
-            }
-            else {
-                monitordevicechart.hideLoading();
-                layer.msg(result.message, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
-            }
-        }, datatype: "json"
-    });
-
-};
-
-function DisplayDeviceCount(monitor, data) {
-    var devicecount = JSON.parse(data);
-
-    var times = [];
-    var counts = [];
-
-    elem.init();
-    elem.render('progress');
-    elem.progress('devicerate', toPercent(devicecount.Rate));
-
-
-    for (var i in devicecount.DeviceCounts) {
-        times.push(devicecount.DeviceCounts[i].Date);
-        counts.push(devicecount.DeviceCounts[i].Count);
-    }
-
-    var option = {
-        title: {
-            text: monitor.title,
-            textStyle: {
-                fontSize: 20,
-                fontFamily: 'sans-serif',
-                fontWeight: 'bold'
-            },
-            left: "center",
-            top: 10
-        },
-        tooltip: {
-            trigger: 'axis'
-        },
-        legend: {
-            data: ['采集数量'],
-            left: 'center',
-            bottom: 10
-        },
-        dataZoom: [
-            //{   // 这个dataZoom组件，默认控制x轴。
-            //    type: 'slider', // 这个 dataZoom 组件是 slider 型 dataZoom 组件
-            //    start: 0,      // 左边在 10% 的位置。
-            //    end: 100         // 右边在 60% 的位置。
-            //},
-            //{   // 这个dataZoom组件，也控制x轴。
-            //    type: 'inside', // 这个 dataZoom 组件是 inside 型 dataZoom 组件
-            //    start: 0,      // 左边在 10% 的位置。
-            //    end: 100        // 右边在 60% 的位置。
-            //}
-        ],
-        grid: {
-            left: '5%',
-            right: '5%',
-            top: '10%',
-            bottom: '10%',
-            containLabel: true
-        },
-        toolbox: {
-            feature: {
-                saveAsImage: {}
-            }
-        },
-        xAxis: {
-            type: 'category',
-            boundaryGap: false,
-            data: times
-        },
-        yAxis: {
-            type: 'value'
-        },
-        series: [
-            {
-                name: '采集数量',
-                type: 'bar',
-                stack: '',
-                data: counts
-            }
-        ]
-    };
-
-    monitordevicechart.hideLoading();
-    monitordevicechart.setOption(option, true, false);
-};
-
-//小数转百分数
-function toPercent(point) {
-    var str = Number(point * 100).toFixed(2);
-    str += "%";
-    return str;
-};

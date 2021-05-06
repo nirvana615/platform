@@ -41,7 +41,7 @@ namespace SERVICE.Controllers
 
 
                     ProjectLayer projectLayer = new ProjectLayer();
-                    projectLayer.Title = "项目";
+                    projectLayer.Title = project.XMMC;
                     #region
                     if ((project.ZXJD != null) && (project.ZXWD != null))
                     {
@@ -54,8 +54,19 @@ namespace SERVICE.Controllers
                         };
                     }
 
-                    //TODO
+                //TODO
+                if (!string.IsNullOrEmpty(project.flzRange))
+                {
+                    Extent extent = new Extent();
+                    extent.Title = "边界范围";
+                    extent.GeoJSON = project.flzRange;
+                    projectLayer.KJFW = extent;
+                }
+                else
+                {
                     projectLayer.KJFW = null;
+                }
+                    
                     projectLayer.YXFW = null;
 
                     string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT a.* from survey_model a join map_project_survey b on a.id=b.surveyid where b.projectid={0} and b.type={1}", id,'5' ));
@@ -81,12 +92,53 @@ namespace SERVICE.Controllers
                     }
 
                     layers.ProjectLayer = projectLayer;
-                    #endregion
-                    return JsonHelper.ToJson(layers);
+                #endregion
+
+                FlzDataLayer flzDataLayer = new FlzDataLayer();
+                flzDataLayer.Title = "数据采集";
+                #region
+                data = string.Empty;
+                data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM flz_data_point WHERE project_id={0}", id));
+                if (!string.IsNullOrEmpty(data))
+                {
+                    List<FlzData> flzDateList = new List<FlzData>();
+                    string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        FlzData flzData = ParseFlzoneHelper.ParseFlzData(rows[i]);
+                        flzDateList.Add(flzData);
+
+                    }
+                    flzDataLayer.FlzDataList = flzDateList;
+
+                }
+                #endregion
+
+
+                #region
+                data = string.Empty;
+                data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT * FROM flz_window_info WHERE project_id={0}", id));
+                if (!string.IsNullOrEmpty(data))
+                {
+                    List<FlzWindowInfo> flzWindowInfo = new List<FlzWindowInfo>();
+                    string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+                    for (int i = 0; i < rows.Length; i++)
+                    {
+                        FlzWindowInfo flzData = ParseFlzoneHelper.ParseFlzWindowInfo(rows[i]);
+                        flzWindowInfo.Add(flzData);
+
+                    }
+                    flzDataLayer.FlzWindowInfoList = flzWindowInfo;
 
                 }
 
-          
+
+                layers.FlzDataLayer = flzDataLayer;
+                return JsonHelper.ToJson(layers);
+
+                }
+            #endregion
+
 
             return "没有项目";
         }

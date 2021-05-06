@@ -33,11 +33,11 @@
   <ItemGroup>
     <Reference Include="CC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\Null\Desktop\CC.dll</HintPath>
+      <HintPath>..\CC\bin\Release\CC.dll</HintPath>
     </Reference>
     <Reference Include="COM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\Null\Desktop\COM.dll</HintPath>
+      <HintPath>C:\Users\chenxiaofei\Documents\WXWork\1688850818815251\Cache\File\2021-04\COM.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -49,54 +49,92 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cartesian3.cs" />
     <Compile Include="data\common\survey\BlockExtent.cs" />
-    <Compile Include="data\monitormap\MapDisasterProperty.cs" />
+    <Compile Include="data\common\survey\SurDOM.cs" />
+    <Compile Include="data\common\survey\SurDSM.cs" />
+    <Compile Include="data\common\survey\SurMap.cs" />
+    <Compile Include="data\common\survey\SurModel.cs" />
+    <Compile Include="data\common\survey\SurPointCloud.cs" />
+    <Compile Include="data\common\survey\SurveyData.cs" />
+    <Compile Include="data\flzone\flzproject\FlzWindowInfo.cs" />
+    <Compile Include="data\flzone\flzproject\FlzData.cs" />
+    <Compile Include="data\flzone\flzproject\FlzProject.cs" />
+    <Compile Include="data\managemap\MapDeviceDatabase.cs" />
+    <Compile Include="data\managemap\MapDeviceSql.cs" />
+    <Compile Include="data\managemap\MapDeviceValue.cs" />
+    <Compile Include="data\managemap\MapUserRole.cs" />
+    <Compile Include="data\manage\Coordinate.cs" />
+    <Compile Include="data\manage\Database.cs" />
+    <Compile Include="data\manage\DatabaseString.cs" />
+    <Compile Include="data\manage\Device.cs" />
+    <Compile Include="data\manage\DeviceString.cs" />
+    <Compile Include="data\manage\Factory.cs" />
+    <Compile Include="data\manage\Role.cs" />
+    <Compile Include="data\manage\Sale.cs" />
+    <Compile Include="data\manage\SQL.cs" />
+    <Compile Include="data\manage\SQLString.cs" />
+    <Compile Include="data\manage\User.cs" />
+    <Compile Include="data\manage\UserRole.cs" />
+    <Compile Include="data\manage\XZQ.cs" />
     <Compile Include="data\monitormap\MapDisasterCriterion.cs" />
-    <Compile Include="data\monitormap\MapDisasterWarning.cs" />
+    <Compile Include="data\monitormap\MapDisasterMonitor.cs" />
+    <Compile Include="data\monitormap\MapDisasterProperty.cs" />
+    <Compile Include="data\monitormap\MapDisasterSection.cs" />
     <Compile Include="data\monitormap\MapDisasterThreshold.cs" />
+    <Compile Include="data\monitormap\MapDisasterWarning.cs" />
     <Compile Include="data\monitormap\MapModelCriterion.cs" />
-    <Compile Include="data\monitormap\MapProjectWarningModel.cs" />
-    <Compile Include="data\monitormap\MapProjectWarningInfo.cs" />
+    <Compile Include="data\monitormap\MapMonitorDevice.cs" />
     <Compile Include="data\monitormap\MapMonitorThreshold.cs" />
+    <Compile Include="data\monitormap\MapProjectDisaster.cs" />
+    <Compile Include="data\monitormap\MapProjectMonitor.cs" />
+    <Compile Include="data\monitormap\MapProjectSurvey.cs" />
+    <Compile Include="data\monitormap\MapProjectWarningInfo.cs" />
+    <Compile Include="data\monitormap\MapProjectWarningModel.cs" />
+    <Compile Include="data\monitormap\MapSectiontMonitor.cs" />
     <Compile Include="data\monitormap\MapUserMonitorProject.cs" />
     <Compile Include="data\monitor\DeviceCountDay.cs" />
     <Compile Include="data\monitor\DeviceCountResult.cs" />
     <Compile Include="data\monitor\device\DataStatistics.cs" />
-    <Compile Include="data\monitor\device\GNSSMonitor.cs" />
-    <Compile Include="data\monitor\device\LFMonitor.cs" />
-    <Compile Include="data\monitor\device\QJMonitor.cs" />
-    <Compile Include="data\monitor\device\SBWYMonitor.cs" />
-    <Compile Include="data\monitor\device\YL.cs" />
-    <Compile Include="data\monitor\device\LF.cs" />
-    <Compile Include="data\monitor\device\YLDelta.cs" />
-    <Compile Include="data\monitor\device\LFDelta.cs" />
-    <Compile Include="data\monitor\device\YLMonitor.cs" />
-    <Compile Include="data\monitor\device\YLValue.cs" />
-    <Compile Include="data\monitor\device\LFValue.cs" />
-    <Compile Include="data\monitor\device\SBWYValue .cs" />
-    <Compile Include="data\monitor\device\QJValue .cs" />
-    <Compile Include="data\monitor\device\QJDelta.cs" />
-    <Compile Include="data\monitor\device\QJ.cs" />
-    <Compile Include="data\monitor\environment\RAIN.cs" />
-    <Compile Include="data\monitor\environment\RAINDelta.cs" />
-    <Compile Include="data\monitor\device\SBWY.cs" />
-    <Compile Include="data\monitor\device\SBWYDelta.cs" />
-    <Compile Include="data\monitor\device\Value.cs" />
     <Compile Include="data\monitor\device\GNSS.cs" />
     <Compile Include="data\monitor\device\GNSSDelta.cs" />
+    <Compile Include="data\monitor\device\GNSSMonitor.cs" />
     <Compile Include="data\monitor\device\GNSSValue.cs" />
-    <Compile Include="data\monitor\environment\WATER.cs" />
-    <Compile Include="data\monitor\environment\WATERDelta.cs" />
+    <Compile Include="data\monitor\device\LF.cs" />
+    <Compile Include="data\monitor\device\LFDelta.cs" />
+    <Compile Include="data\monitor\device\LFMonitor.cs" />
+    <Compile Include="data\monitor\device\LFValue.cs" />
+    <Compile Include="data\monitor\device\QJ.cs" />
+    <Compile Include="data\monitor\device\QJDelta.cs" />
+    <Compile Include="data\monitor\device\QJMonitor.cs" />
+    <Compile Include="data\monitor\device\QJValue .cs" />
+    <Compile Include="data\monitor\device\SBWY.cs" />
+    <Compile Include="data\monitor\device\SBWYDelta.cs" />
+    <Compile Include="data\monitor\device\SBWYMonitor.cs" />
+    <Compile Include="data\monitor\device\SBWYValue .cs" />
+    <Compile Include="data\monitor\device\Value.cs" />
+    <Compile Include="data\monitor\device\YL.cs" />
+    <Compile Include="data\monitor\device\YLDelta.cs" />
+    <Compile Include="data\monitor\device\YLMonitor.cs" />
+    <Compile Include="data\monitor\device\YLValue.cs" />
     <Compile Include="data\monitor\disaster\Disaster.cs" />
     <Compile Include="data\monitor\disaster\DisasterProperty.cs" />
     <Compile Include="data\monitor\disaster\DisasterString.cs" />
+    <Compile Include="data\monitor\disaster\RockfallProperty.cs" />
+    <Compile Include="data\monitor\disaster\RockfallPropertyString.cs" />
     <Compile Include="data\monitor\disaster\RockfallWarning.cs" />
     <Compile Include="data\monitor\disaster\RockfallWarningString.cs" />
+    <Compile Include="data\monitor\environment\RAIN.cs" />
+    <Compile Include="data\monitor\environment\RAINDelta.cs" />
+    <Compile Include="data\monitor\environment\WATER.cs" />
+    <Compile Include="data\monitor\environment\WATERDelta.cs" />
     <Compile Include="data\monitor\environment\WATERMonitor.cs" />
     <Compile Include="data\monitor\layer\CenterPoint.cs" />
     <Compile Include="data\monitor\layer\DisasterLayer.cs" />
     <Compile Include="data\monitor\layer\DisasterLayers.cs" />
     <Compile Include="data\monitor\layer\Extent.cs" />
+    <Compile Include="data\monitor\layer\LayerList.cs" />
+    <Compile Include="data\monitor\layer\FlzDataLayer.cs" />
     <Compile Include="data\monitor\layer\MonitorLayer.cs" />
     <Compile Include="data\monitor\layer\MonitorPointLayer.cs" />
     <Compile Include="data\monitor\layer\MonitorPointLayers.cs" />
@@ -107,62 +145,52 @@
     <Compile Include="data\monitor\monitor\Monitor.cs" />
     <Compile Include="data\monitor\monitor\MonitorInfo.cs" />
     <Compile Include="data\monitor\monitor\MonitorString.cs" />
-    <Compile Include="data\monitor\project\Project.cs" />
-    <Compile Include="data\monitor\project\ProjectString.cs" />
-    <Compile Include="data\monitor\disaster\RockfallPropertyString.cs" />
-    <Compile Include="data\monitor\disaster\RockfallProperty.cs" />
     <Compile Include="data\monitor\monitor\Section.cs" />
     <Compile Include="data\monitor\monitor\SectionString.cs" />
-    <Compile Include="data\common\survey\SurDOM.cs" />
-    <Compile Include="data\common\survey\SurDSM.cs" />
-    <Compile Include="data\common\survey\SurMap.cs" />
-    <Compile Include="data\common\survey\SurModel.cs" />
-    <Compile Include="data\common\survey\SurPointCloud.cs" />
-    <Compile Include="data\monitor\layer\LayerList.cs" />
-    <Compile Include="data\manage\Coordinate.cs" />
-    <Compile Include="data\manage\DatabaseString.cs" />
-    <Compile Include="data\manage\DeviceString.cs" />
-    <Compile Include="data\manage\Factory.cs" />
-    <Compile Include="data\manage\Sale.cs" />
-    <Compile Include="data\manage\SQLString.cs" />
-    <Compile Include="data\manage\UserRole.cs" />
-    <Compile Include="data\manage\XZQ.cs" />
-    <Compile Include="data\monitormap\MapDisasterMonitor.cs" />
-    <Compile Include="data\monitormap\MapDisasterSection.cs" />
-    <Compile Include="data\monitormap\MapMonitorDevice.cs" />
-    <Compile Include="data\monitormap\MapProjectDisaster.cs" />
-    <Compile Include="data\monitormap\MapProjectMonitor.cs" />
-    <Compile Include="data\monitormap\MapProjectSurvey.cs" />
-    <Compile Include="data\monitormap\MapSectiontMonitor.cs" />
-    <Compile Include="data\monitor\warning\MonitorThresholdString.cs" />
+    <Compile Include="data\monitor\project\Project.cs" />
+    <Compile Include="data\monitor\project\ProjectString.cs" />
     <Compile Include="data\monitor\warning\MonitorThreshold.cs" />
-    <Compile Include="data\monitor\warning\RockfallThresholdString.cs" />
+    <Compile Include="data\monitor\warning\MonitorThresholdString.cs" />
     <Compile Include="data\monitor\warning\RockfallThreshold.cs" />
+    <Compile Include="data\monitor\warning\RockfallThresholdString.cs" />
     <Compile Include="data\monitor\warning\Threshold.cs" />
     <Compile Include="data\monitor\warning\ThresholdData.cs" />
-    <Compile Include="data\monitor\warning\WarningModel.cs" />
     <Compile Include="data\monitor\warning\WarningCriterion.cs" />
-    <Compile Include="data\monitor\warning\WarningInfoString.cs" />
     <Compile Include="data\monitor\warning\WarningInfo.cs" />
+    <Compile Include="data\monitor\warning\WarningInfoString.cs" />
+    <Compile Include="data\monitor\warning\WarningModel.cs" />
     <Compile Include="data\monitor\warning\WarningModelInfo.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+    <Compile Include="parse\ParseFlzoneHelper.cs" />
     <Compile Include="parse\ParseManageHelper.cs" />
     <Compile Include="parse\ParseMonitorHelper.cs" />
     <Compile Include="enum\Enum.cs" />
-    <Compile Include="data\manage\Database.cs" />
-    <Compile Include="data\manage\Device.cs" />
-    <Compile Include="data\manage\Role.cs" />
-    <Compile Include="data\manage\SQL.cs" />
-    <Compile Include="data\manage\User.cs" />
-    <Compile Include="data\managemap\MapDeviceDatabase.cs" />
-    <Compile Include="data\managemap\MapDeviceSql.cs" />
-    <Compile Include="data\managemap\MapDeviceValue.cs" />
-    <Compile Include="data\managemap\MapUserRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="enum\EnumEW.cs" />
     <Compile Include="utility\ETL.cs" />
-    <Compile Include="data\common\survey\SurveyData.cs" />
     <Compile Include="utility\ResponseResult.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
+    <None Include="obj\Debug\MODEL.csproj.CopyComplete" />
+    <None Include="obj\Debug\MODEL.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Release\MODEL.csproj.CoreCompileInputs.cache" />
+    <None Include="obj\Release\MODEL.csprojAssemblyReference.cache" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bin\Debug\CC.dll" />
+    <Content Include="bin\Debug\COM.dll" />
+    <Content Include="bin\Debug\MODEL.dll" />
+    <Content Include="bin\Debug\MODEL.pdb" />
+    <Content Include="obj\Debug\MODEL.csproj.FileListAbsolute.txt" />
+    <Content Include="obj\Debug\MODEL.dll" />
+    <Content Include="obj\Debug\MODEL.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Release\" />
+    <Folder Include="obj\Debug\TempPE\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
