@@ -54,8 +54,19 @@ namespace SERVICE.Controllers
                         };
                     }
 
-                    //TODO
+                //TODO
+                if (!string.IsNullOrEmpty(project.flzRange))
+                {
+                    Extent extent = new Extent();
+                    extent.Title = "边界范围";
+                    extent.GeoJSON = project.flzRange;
+                    projectLayer.KJFW = extent;
+                }
+                else
+                {
                     projectLayer.KJFW = null;
+                }
+                    
                     projectLayer.YXFW = null;
 
                     string data = PostgresqlHelper.QueryData(pgsqlConnection, string.Format("SELECT a.* from survey_model a join map_project_survey b on a.id=b.surveyid where b.projectid={0} and b.type={1}", id,'5' ));

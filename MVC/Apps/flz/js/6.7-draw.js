@@ -126,7 +126,7 @@ function ClearAction() {
 function ClearTemp() {
     var count = 0;
     console.log(viewer.entities);
-    while (count < 20) {
+    while (count < 40) {
         for (var i = 0; i < viewer.entities._entities._array.length; i++) {
             if ((viewer.entities._entities._array[i]._name) && ((viewer.entities._entities._array[i]._name.indexOf("temppoint") > -1)
                 || (viewer.entities._entities._array[i]._name.indexOf("temppolygon") > -1)

@@ -241,15 +241,35 @@ function LoadLayerListLayer(id) {
                                 layers.push(prjcenter);
                             }
                         }
+                        //斜坡体
+                        if (layerlist.ProjectLayer != null && layerlist.ProjectLayer.KJFW != null ) {
+                            var bianjie = new Object;
+                            var bianjie = new Object;
+                            bianjie.title = "边界范围";
+                            bianjie.type = "BIANJIE";
+                            bianjie.id = "BIANJIE" + id;
+                            bianjie.pointList = JSON.parse(layerlist.ProjectLayer.KJFW.GeoJSON);
+                            var entity = viewer.entities.getById(bianjie.id);
+                            if (entity != undefined) {
+                                bianjie.checked = true;
+                                bianjie.spread = true;
+                            }
+                            else {
+                                bianjie.checked = false;
+                            }
+                            bianjie.showCheckbox = true;//显示复选框
+                            layers.push(bianjie);
+                        }
                         
                         //斜坡体
-                        if (layerlist.ProjectLayer != null) {
-                            var xiepoti = new Object;
-                            xiepoti.title = "斜坡体";
-                            xiepoti.label = "斜坡体";
-                            xiepoti.datas = layerlist.ProjectLayer;
-                            xiepoti.id = "XIEPOTI_" + id;
-                            xiepoti.type = "XIEPOTI";
+                        if (layerlist.ProjectLayer != null && false) {
+                            var bianjie = new Object;
+                            bianjie.title = "边界范围";
+                            bianjie.type = "BIANJIE";
+                            bianjie.id = "BIANJIE" + id;
+                            bianjie.pointList = GeoJSON;
+                            bianjie.showCheckbox = true;//显示复选框
+
                             var entity = viewer.entities.getById(xiepoti.id);
                             if (entity != undefined) {
                                 xiepoti.checked = true;
@@ -412,6 +432,7 @@ function LoadLayerListLayer(id) {
                                     //如果选中就缩放到目标
                                     //如果未选中就不做任何处理
                                     var data = obj.data;
+                                    console.log(data);
                                     if (data.checked) {
                                         if (data.children != undefined) {
                                             if (data.type == "FLZWINDOW") {
@@ -438,9 +459,9 @@ function LoadLayerListLayer(id) {
                                             console.log(data);
                                             //  viewer.flyTo(viewer.entities.getById(data.id), { duration: 1, offset: new Cesium.HeadingPitchRange(Cesium.Math.toRadians(0), Cesium.Math.toRadians(-90), 50) });
                                             // viewer.zoomTo(viewer.entities.getById(data.id));//
-                                            if (data.type == "FLZJIELI" || data.type == "YOUSHIMIAN") {
+                                            if (data.type == "FLZJIELI") {// || data.type == "YOUSHIMIAN"
                                                 //viewer.zoomTo(viewer.entities.getById(data.id + "_LABEL"));
-                                                console.log(data);
+                                                console.log(data);//测窗的
                                                 for (var i in layers[0].children) {
                                                     for (var j in layers[0].children[i].children) {
                                                         if (data.id == layers[0].children[i].children[j].id) {
@@ -452,8 +473,12 @@ function LoadLayerListLayer(id) {
                                                 }
                                                 
                                                 
+                                            } else if (data.type == "YOUSHIMIAN") {// || data.type == "YOUSHIMIAN"
+                                                //viewer.zoomTo(viewer.entities.getById(data.id + "_LABEL"));
+                                                console.log(data);
+                                                viewer.zoomTo(viewer.entities.getById(data.id + "_LABEL"), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(data.datas.inclination - 180), Cesium.Math.toRadians(data.datas.dipAngle-90), 40));
                                             }else {
-                                                viewer.zoomTo(viewer.entities.getById(data.id), new Cesium.HeadingPitchRange(Cesium.Math.toRadians(300), Cesium.Math.toRadians(-120), 100))
+                                                viewer.zoomTo(viewer.entities.getById(data.id))
                                             }
                                            
                                         }
@@ -869,9 +894,31 @@ function LoadLayerListLayer(id) {
                                                 data.checked = true;
                                                 //看看把父亲也选中
                                             }
-                                            else if (data.type == "DISASTERSURMODEL") {
-                                                //灾害体模型
+                                            else if (data.type == "BIANJIE") {
+                                                //消落带边界
+                                                console.log(data);
+                                                var entityFater = viewer.entities.getById(data.id);
+                                                var sum = 0;
 
+                                                if (entityFater == undefined) {
+                                                    var points = data.pointList;
+                                                    points.push(points[0]);
+                                                    viewer.entities.add({
+                                                        id: data.id,
+                                                        polyline: {
+                                                            positions: points,
+                                                            width: 3,
+                                                            arcType: Cesium.ArcType.RHUMB,
+                                                            material: Cesium.Color.YELLOW,
+                                                            show: true,
+                                                            clampToGround: true,
+                                                            classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
+                                                        },
+                                                    });
+                                                    
+
+                                                }
+                                                data.checked = true;
                                             }
                                             else if (data.type == "FLZPOINT") {
                                                 //监测点
@@ -1099,7 +1146,7 @@ function LoadLayerListLayer(id) {
                                                     viewer.entities.removeById(obj.data.id);
                                                     viewer.entities.removeById(obj.data.id + "_LABEL");
                                                     for (var i in layers[0].children) {
-                                                        if (obj.data.id== layers[0].children[i].id) {
+                                                        if (obj.data.id == layers[0].children[i].id) {
                                                             layers[0].children.splice(i, 1);
                                                             break;
                                                         }
@@ -1108,11 +1155,58 @@ function LoadLayerListLayer(id) {
                                                     tree.reload('prjlayerlistid', { data: layers });
                                                     for (var m in windowInfoList) {
                                                         if (("FLZWINDOW_" + windowInfoList[m].id) == obj.data.id) {
-                                                            windowInfoList.splice(m,1);
+                                                            windowInfoList.splice(m, 1);
                                                         }
                                                     }
-                                                    
 
+
+                                                }, datatype: "json"
+                                            });
+                                        } else if (data.type == "BIANJIE") {//删除边界范围
+                                            var temp = {};
+                                            temp.id = currentprojectid;
+                                            temp.cookie = document.cookie;
+                                            temp.flzRange = null;
+                                            var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+                                            $.ajax({
+                                                url: servicesurl + "/api/FLZ/UpdateProject", type: "put", data: temp,
+                                                success: function (result) {
+                                                    layer.close(loadinglayerindex);
+                                                    if (result == "更新成功！") {
+                                                        layer.msg("删除成功", { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                                        //关闭
+                                                        //刷新项目列表
+                                                        //GetUserProjects();
+                                                        //var flzWindowLayer = new Object;
+                                                        //flzWindowLayer.title = "边界范围";
+                                                        //flzWindowLayer.type = "BIANJIE";
+                                                        //flzWindowLayer.id = "BIANJIE" + currentprojectid;
+                                                        //flzWindowLayer.pointList = points;
+                                                        //flzWindowLayer.checked = true;
+                                                        //flzWindowLayer.showCheckbox = true;//显示复选框
+                                                        //flzWindowLayer.children = [];
+                                                        //layers.push(flzWindowLayer);
+                                                        //console.log(layers);
+                                                        //tree.reload('prjlayerlistid', { data: layers });
+                                                        //if (handler != undefined) {
+                                                        //    handler.destroy();
+                                                        //}
+                                                        //isRedo = true;
+                                                        //ClearTemp();
+                                                       // tree.reload('prjlayerlistid', { data: layers });
+                                                        for (var i in layers ) {
+                                                            if (layers[i].type == "BIANJIE") {
+                                                                layers.splice(i, 1);
+                                                                break;
+                                                            }
+                                                        }
+                                                        console.log(layers);
+                                                        viewer.entities.removeById(data.id);
+                                                        tree.reload('prjlayerlistid', { data: layers });
+                                                    } else {
+                                                        layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                                                    }
                                                 }, datatype: "json"
                                             });
                                         } else {

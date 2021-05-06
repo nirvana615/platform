@@ -722,3 +722,154 @@ function drwjiegou() {
     }
 
 };
+//边界勾画
+function drwBianJie() {
+    ClearTemp();
+    if (currentprojectid == null) {
+        layer.msg('请先选择项目');
+        return;
+    }
+    if (modleInfoList.length == 0) {
+        layer.msg('请先选择模型');
+        return;
+    }
+    for (var i in layers) {
+        if (layers[i].type == "BIANJIE") {
+            layer.msg('已有边界，请先删除');
+            return;
+        }
+    }
+    isPoint = false;
+    isLength = true;
+    isHeight = false;
+    isAraa = false;
+    isAzimuth = false;
+    isRedo = false;
+    isPointLabel = false;
+    isPolylineLabel = false;
+    isPolygonLabel = false;
+    isOccurrence = false;
+    isWindowZiDingyi = false;
+
+    if (isLength) {
+        if (handler != undefined) {
+            handler.destroy();
+        }
+
+        handler = new Cesium.ScreenSpaceEventHandler(canvas);
+
+        //左击
+        handler.setInputAction(function (leftclik) {
+            if (isRedo) {
+                ClearTemp();
+                isRedo = false;
+                points = [];
+            }
+
+            var pickedOject = scene.pick(leftclik.position);
+            if (pickedOject != undefined) {
+                var position = scene.pickPosition(leftclik.position);
+                if (position != undefined) {
+                    if (Cesium.defined(position)) {
+                        var cartesian3 = new Cesium.Cartesian3(position.x, position.y, position.z);
+                        
+                        points.push(position);
+
+                        viewer.entities.add({
+                            name: "ptMeasue" + NewGuid(),
+                            position: position,
+                            point: {
+                                pixelSize: 2,
+                                color: Cesium.Color.YELLOW
+                            }
+                        });
+
+                        if (points.length > 1) {
+                            var point = points[points.length - 2];
+                                //绘制贴模型线
+                            viewer.entities.add({
+                                name: "plMeasue" + NewGuid(),
+                                polyline: {
+                                    positions: [point, position],
+                                    width: 3,
+                                    arcType: Cesium.ArcType.RHUMB,
+                                    material: Cesium.Color.YELLOW,
+                                    show: true,
+                                    clampToGround: true,
+                                    classificationType: Cesium.ClassificationType.CESIUM_3D_TILE
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+
+
+
+        if (isMobile.any()) {//双指
+            handler.setInputAction(function (pinch) {
+                if (points.length > 2) {
+                   
+                
+                    if (handler != undefined) {
+                        handler.destroy();
+                    }
+
+                    isRedo = true;
+                }
+
+            }, Cesium.ScreenSpaceEventType.PINCH_START);
+        }
+        else {//右击
+            handler.setInputAction(function (rightclik) {
+                if (points.length > 2) {
+                    var temp = {};
+                    temp.id = currentprojectid;
+                    temp.cookie = document.cookie;
+                    temp.flzRange = JSON.stringify(points);
+                    var loadinglayerindex = layer.load(0, { shade: false, zIndex: layer.zIndex, success: function (loadlayero) { layer.setTop(loadlayero); } });
+
+                    $.ajax({
+                        url: servicesurl + "/api/FLZ/UpdateProject", type: "put", data: temp,
+                        success: function (result) {
+                            layer.close(loadinglayerindex);
+                            layer.msg(result, { zIndex: layer.zIndex, success: function (layero) { layer.setTop(layero); } });
+                            console.log(result);
+                            if (result == "更新成功！") {
+
+                                //关闭
+                                layer.close(projectinfoeditlayerindex);
+                                
+                                //刷新项目列表
+                                //GetUserProjects();
+                                var flzWindowLayer = new Object;
+                                flzWindowLayer.title = "边界范围";
+                                flzWindowLayer.type = "BIANJIE";
+                                flzWindowLayer.id = "BIANJIE" + currentprojectid;
+                                flzWindowLayer.pointList = points;
+                                flzWindowLayer.checked = true;
+                                flzWindowLayer.showCheckbox = true;//显示复选框
+                                layers.push(flzWindowLayer);
+                                console.log(layers);
+                                tree.reload('prjlayerlistid', { data: layers });
+                                if (handler != undefined) {
+                                    handler.destroy();
+                                }
+                                isRedo = true;
+                                ClearTemp();
+                            }
+                        }, datatype: "json"
+                    });
+
+                    
+                    if (handler != undefined) {
+                        handler.destroy();
+                    }
+                    isRedo = true;
+                }
+
+            }, Cesium.ScreenSpaceEventType.RIGHT_CLICK);
+        }
+    }
+};

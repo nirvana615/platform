@@ -670,9 +670,21 @@ namespace SERVICE.Controllers
                             return "更新项目失败！";
                         }
                     }
-                    else
+                    else//UPDATE flz_project SET xmmc={0}   直接更新数据库
                     {
-                        return "缺少必需参数！";
+                        int updatecount = PostgresqlHelper.UpdateData(pgsqlConnection, string.Format(
+                            "UPDATE flz_project SET flz_range={0}  WHERE id={1} ",
+                            SQLHelper.UpdateString(flzRange), id));
+
+                        if (updatecount == 1)
+                        {
+                            return "更新成功！";
+                        }
+                        else
+                        {
+                            return "更新项目失败！";
+                        }
+                        
                     }
                 }
                 else
