@@ -61,6 +61,36 @@ namespace MODEL
             }
         }
 
+        public static Region ParsePCloudRegion(string data)
+        {
+            if (string.IsNullOrEmpty(data))
+            {
+                logger.Warn("该项目无区域数据！");
+                return null;
+            }
+            try
+            {
+                string[] rows = data.Split(new char[] { COM.ConstHelper.rowSplit });
+
+
+                string[] row = rows[0].Split(new char[] { COM.ConstHelper.columnSplit });
+                Region Region = new Region()
+                {
+                    Id = Convert.ToInt32(row[0].ToString()),
+                    RegionName = row[1].ToString(),
+                    ProjectId = Convert.ToInt32(row[2].ToString()),
+                    CJSJ = row[3].ToString(),
+                    ZTM = Convert.ToInt32(row[5].ToString()),
+                };
+
+                return Region;
+            }
+            catch (Exception ex)
+            {
+                logger.Error("Region解析失败：" + data, ex);
+                return null;
+            }
+        }
 
         /// <summary>
         /// 项目图层加载

@@ -397,8 +397,95 @@ function PCloudProjectInfo(id, style) {
     }
 };
 
+//上传文件
+function UploadData() {
+    layer.open({
+        type: 1
+        , title: ['上传点云数据', 'font-weight:bold;font-size:large;font-family:Microsoft YaHei']
+        , area: ['800px', '400px']
+        , shade: 0
+        , offset: 'auto'
+        , closeBtn: 1
+        , maxmin: true
+        , moveOut: true
+        , content:'<!--上传数据--><form class="layui-form" style="margin-top:5px;margin-right:5px;" lay-filter="uploaddataform">    <div class="layui-form-item">        <div class="layui-row">            <div class="layui-col-md6">                <div class="grid-demo grid-demo-bg1">                    <label class="layui-form-label">上传项目</label>                    <div class="layui-input-block">                        <select id="projectid" name="project">                            <option value="">请选择</option>                        </select>                    </div>                </div>            </div>                     <div class="layui-col-md6">                <div class="grid-demo">                    <label class="layui-form-label">项目区域</label>                    <div class="layui-input-block">                        <select id="regionid" name="region" lay-filter="regionidfilter">                            <option value="">请选择</option>                        </select>                    </div>                </div>            </div>                </div>    </div>    <div class="layui-form-item">        <div class="layui-row">            <div class="layui-col-md6" style="width:50%">                <div class="grid-demo grid-demo-bg1">                    <label class="layui-form-label">文件名</label>                    <div class="layui-input-block">                        <input type="text" name="filename" lay-verify="required|number" autocomplete="off" placeholder="请输入" class="layui-input" />                    </div>                </div>            </div>            <div class="layui-col-md6">                <div class="grid-demo grid-demo-bg1">                    <div class="layui-inline">                        <label class="layui-form-label">采集时间</label>                        <div class="layui-input-inline" style="width:250px;">                            <input type="text" id="cjsjid" name="cjsj" lay-verify="date" placeholder="YYYY-MM-DD" autocomplete="off" class="layui-input" />                        </div>                    </div>                </div>            </div>        </div>    </div>    <div class="layui-form-item">        <div class="layui-row">            <div class="layui-col-md6">                <div class="grid-demo grid-demo-bg1">                    <label class="layui-form-label">采集人员</label>                    <div class="layui-input-block">                        <input type="text" name="people" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input" />                    </div>                </div>            </div>            <div class="layui-col-md6">                <div class="grid-demo grid-demo-bg1">                    <label class="layui-form-label">数据类型</label>                    <div class="layui-input-block">                        <select id="typeid" name="type">                            <option value="">请选择</option>                        </select>                    </div>                </div>            </div>        </div>    </div>    <div class="layui-form-item">        <label class="layui-form-label">备注</label>        <div class="layui-input-block">            <input type="text" name="bz" autocomplete="off" placeholder="请输入" class="layui-input" />        </div>    </div>    <div class="layui-form-item" style="margin-top:30px">        <div style="position:absolute;left:50px;">            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="selectdata" style="width:100px">选择文件</button>            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="uploaddata" style="width:100px">上传</button>        </div>    </div></form>'
+        , zIndex: layer.zIndex
+        , success: function (layero) {
+            layer.setTop(layero);
+
+            if (projectlist.length > 0) {
+                for (var i in projectlist) {
+                    document.getElementById("projectid").innerHTML += '<option value="' + projectlist[i].value + '">' + projectlist[i].name + '</option>';
+                }
+            }
+
+            //渲染开始时间&结束时间
+            date.render({
+                elem: '#cjsjid'
+            });
+            form.render();
+            form.render('select');
+
+            // 联动
+            layui.use('form', function () {
+
+                form.on('select(regionidfilter)', function (data) {
+                    getregion(data);
+                });
+            });
 
 
+
+            layui.use('upload', function (obj) {
+            var $ = layui.jquery , upload = layui.upload;
+
+                //选完文件后不自动上传
+                upload.render({
+                    elem: '#selectdata'
+                    , url: servicesurl + "/api/PointCloudUpload/UploadData" //改成您自己的上传接口
+                    , auto: false
+                    , accept: 'file'                  //上传文件类型
+                    , bindAction: '#uploaddata'
+                    , before: function () {//携带额外的数据
+                        this.data = {
+                            "dataid": 1,
+                            "filename": '1-2010'
+                        }
+                    }
+                    , done: function (res) {
+                        if (res.code == 1) {
+                            layer.msg('点云上传成功');
+                        }
+                        else {
+                            layer.msg('上传失败，请重试！！！');
+                        }
+                    }, datatype: "json"
+                });
+            });     
+
+        }
+    });
+}
+// 获取项目区域
+function getregion(data) {
+    var params = {
+        buildingId: data.value
+    }
+    //检查项目添加到下拉框中
+    $.ajax({
+        url: servicesurl + "/api/PointCloudParameter/GetPointCloudRegion",
+        type: "get",
+        dataType: 'json',
+        data: { "projectid": params.buildingId },
+        success: function (data) {
+            $("#regionid").empty();//清空下拉框的值
+            $.each(data, function (index, item) {
+                $('#regionid').append(new Option(item.name, item.id));// 下拉菜单里添加元素
+            });
+            layui.form.render("select");//重新渲染 固定写法
+        }
+    });
+};
 
 //创建项目
 $("#projectadd").on("click", function () {
@@ -413,6 +500,11 @@ $("#projectadd").on("click", function () {
             layer.close(index);
         });
     }
+});
+
+//上传数据
+$("#selectpcdata").on("click", function () {
+    UploadData();
 });
 
 //新增项目提示
@@ -458,30 +550,4 @@ $("#selectpcdata").on("mouseleave", function () {
         layer.close(tipslayer);
         tipslayer = -1;
     }
-});
-
-layui.use('upload', function () {
-    var $ = layui.jquery
-        , upload = layui.upload;
-
-    //选完文件后不自动上传
-    upload.render({
-
-        elem: '#selectpcdata'
-        , url: servicesurl + "/api/PointCloudUpload/UploadData", type: "put" //改成您自己的上传接口
-        , auto: false
-        , accept: 'file'                  //上传文件类型
-        , bindAction: '#startupload'
-        , done: function (res) {
-            if (res.code == 1) {
-                layer.msg('点云上传成功');
-            }
-            else {
-                layer.msg('上传失败，请重试！！！');
-            }
-
-
-        }, datatype: "json"
-    });
-
 });

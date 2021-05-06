@@ -10,7 +10,7 @@ using COM;
 using DAL;
 using MODEL;
 
-using System.Web.Mvc;
+
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -25,8 +25,11 @@ namespace SERVICE.Controllers
         /// </summary>
         /// <param name="cookie"></param>
         /// <returns></returns>
+        [HttpPost]
+
         public string   UploadData()
         {
+            string dataid = HttpContext.Current.Request.Form["dataid"];
             PCloudData pCloudData =new PCloudData();
             HttpFileCollection uploadFiles = System.Web.HttpContext.Current.Request.Files;
             for (int i = 0; i < uploadFiles.Count; i++)
@@ -35,13 +38,10 @@ namespace SERVICE.Controllers
                 System.Web.HttpPostedFile postedFile = uploadFiles[i];
                 string savePath = postedFile.FileName;//完整的路径
                 string fileName = System.IO.Path.GetFileName(postedFile.FileName); //获取到名称
-                string fileExtension = System.IO.Path.GetExtension(fileName);  //文件的扩展名称
-                //string type = fileName.Substring(fileName.LastIndexOf(".") + 1);    //类型  
+                string fileExtension = System.IO.Path.GetExtension(fileName);  //文件的扩展名称 
                 if (uploadFiles[i].ContentLength > 0)
-                    uploadFiles[i].SaveAs("C:/Users/沐姜子/Desktop/点云时序对比/");
+                    uploadFiles[i].SaveAs(HttpContext.Current.Server.MapPath("~/Data/SurPointCloud/") + fileName);// +".txt");
             }
-
-
             return JsonHelper.ToJson(pCloudData); 
         }
     }
