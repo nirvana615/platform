@@ -2039,9 +2039,9 @@ function DrowHuaHua(flag, cartesian3, position) {
                         var yxishu = (maxY - minY) / 10;
                         var jimiList = [];
                         for (var x = 0; x < 11; x++) {
-                            for (var y = 0; y < 11; y++) {
+                            for (var m = 0; m < 11; m++) {
 
-                                var temp = new Cesium.Cartesian2(minX + xxishu * x, minY + yxishu * y);//b点，加了5.
+                                var temp = new Cesium.Cartesian2(minX + xxishu * x, minY + yxishu * m);//b点，加了5.
 
                                 jimiList.push(scene.pickPosition(temp));
                             }
@@ -2190,8 +2190,9 @@ function DrowHuaHua(flag, cartesian3, position) {
                                                 data.field.id = result;
                                                 windowInfoList.push(data.field);
                                                 console.log(windowInfoList);
+                                                ClearTemp();
                                                 tree.reload('prjlayerlistid', { data: layers });
-
+                                                
                                                 if (handler != undefined) {
                                                     handler.destroy();
                                                 }
