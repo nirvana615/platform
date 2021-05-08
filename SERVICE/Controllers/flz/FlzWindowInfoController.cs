@@ -6,11 +6,10 @@ using System.Net;
 using System.Net.Http;
 using System.Web;
 using System.Web.Http;
+
 using COM;
 using DAL;
 using MODEL;
-using g3;
-using CC;
 
 namespace SERVICE.Controllers
 {

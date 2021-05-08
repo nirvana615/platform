@@ -12,6 +12,7 @@ namespace SERVICE
 {
     public class ManageHelper
     {
+        private static Logger logger = Logger.CreateLogger(typeof(ManageHelper));
         /// <summary>
         /// 验证cookie并返回用户项目标识码
         /// </summary>
@@ -37,8 +38,9 @@ namespace SERVICE
             {
                 string encryptUser = string.Empty;//加密用户信息
                 string encryptRole = string.Empty;//加密角色信息
-
-                string[] items = cookie.Split(new char[] { ';' });
+                logger.Info("【" + cookie + "】cookie里面的");
+                string[] items = cookie.Split(new char[] { ';' }); 
+                logger.Info("【" + items + "】items");
                 if (items.Length != 2)
                 {
                     return CookieHelper.CookieResult.ErrorCookie;//cookie错误
@@ -63,7 +65,8 @@ namespace SERVICE
 
                 List<string> userinfo = COM.CookieHelper.GetUserInfoFromEncrypt(encryptUser);//解密用户信息
                 string roleinfo = COM.CookieHelper.GetRoleInfoFromCookie(encryptRole);//解密角色信息
-
+                logger.Info("【" + userinfo + "】userinfo");
+                logger.Info("【" + roleinfo + "】roleinfo");
                 #region 验证时效性
                 if (DateTime.Now.CompareTo(Convert.ToDateTime(userinfo[3])) > 0)
                 {
@@ -72,6 +75,7 @@ namespace SERVICE
                 #endregion
 
                 User user = ParseManageHelper.ParseUser(PostgresqlHelper.QueryData(connect, string.Format("SELECT *FROM manage_user WHERE username={0} AND password={1} AND ztm={2}", SQLHelper.UpdateString(userinfo[0]), SQLHelper.UpdateString(userinfo[2]), (int)MODEL.Enum.State.InUse)));
+                logger.Info("【" + user + "】user");
                 if (user == null)
                 {
                     return CookieHelper.CookieResult.FailureCookkie;//验证用户失败
@@ -149,7 +153,7 @@ namespace SERVICE
                         }
                     }
                     #endregion
-
+                    logger.Info("11111");
                     return CookieHelper.CookieResult.SuccessCookkie;
                 }
             }

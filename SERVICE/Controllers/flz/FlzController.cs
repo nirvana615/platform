@@ -19,7 +19,7 @@ namespace SERVICE.Controllers
     {
         private static Logger logger = Logger.CreateLogger(typeof(FlzController));
         private static string pgsqlConnection = ConfigurationManager.ConnectionStrings["postgresql"].ConnectionString.ToString();
-
+        
         /// <summary>
         /// 获取当前用户所有项目
         /// </summary>
@@ -29,8 +29,13 @@ namespace SERVICE.Controllers
         public string GetUserFlzProjectList(string cookie)
         {
             string userbsms = string.Empty;
+            logger.Info("【" + pgsqlConnection + "】pgsqlConnection");
+            logger.Info("【" + cookie + "】cookie");
+            
             COM.CookieHelper.CookieResult cookieResult = ManageHelper.ValidateCookie(pgsqlConnection, cookie, ref userbsms);
 
+            logger.Info("【" + cookieResult + "】cookieResult");
+            
             if (cookieResult == COM.CookieHelper.CookieResult.SuccessCookkie)
             {
                 //有效cookie
