@@ -31,13 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\CC\bin\Release\CC.dll</HintPath>
-    </Reference>
-    <Reference Include="COM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\chenxiaofei\Documents\WXWork\1688850818815251\Cache\File\2021-04\COM.dll</HintPath>
+    <Reference Include="COM">
+      <HintPath>..\..\COM\COM.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

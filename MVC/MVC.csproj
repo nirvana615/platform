@@ -45,16 +45,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CC, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\CC\bin\Release\CC.dll</HintPath>
-    </Reference>
     <Reference Include="COM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\chenxiaofei\Documents\WXWork\1688850818815251\Cache\File\2021-04\COM.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
+      <HintPath>..\..\COM\COM.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -579,7 +572,6 @@
     <Content Include="bin\Antlr3.Runtime.dll" />
     <Content Include="bin\Antlr3.Runtime.pdb" />
     <Content Include="bin\BouncyCastle.Crypto.dll" />
-    <Content Include="bin\CC.dll" />
     <Content Include="bin\COM.dll" />
     <Content Include="bin\DAL.dll" />
     <Content Include="bin\DAL.pdb" />
@@ -1227,7 +1219,6 @@
     <Content Include="Scripts\Cesium\Workers\WebMercatorProjection-c0de4fbc.js" />
     <Content Include="Scripts\Cesium\Workers\when-0488ac89.js" />
     <Content Include="Scripts\ECharts\echarts.min.js" />
-    <Content Include="Scripts\httpVueLoader.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -1353,8 +1344,6 @@
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\navigation\SpirographPositionProperty.js" />
     <Content Include="Scripts\navigation\viewerCesiumNavigationMixin.min.js" />
-    <Content Include="Scripts\vue.js" />
-    <Content Include="Scripts\vue.min.js" />
     <Content Include="Scripts\login\font-awesome.min.css" />
     <Content Include="Scripts\login\form-elements.css" />
     <Content Include="Scripts\login\style.css" />

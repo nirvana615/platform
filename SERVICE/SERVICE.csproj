@@ -45,18 +45,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CC">
-      <HintPath>..\CC\bin\Release\CC.dll</HintPath>
-    </Reference>
-    <Reference Include="COM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Users\chenxiaofei\Desktop\COM.dll</HintPath>
-    </Reference>
-    <Reference Include="geometry3Sharp">
-      <HintPath>C:\Users\chenxiaofei\Documents\WXWork\1688850818815251\Cache\File\2021-04\geometry3Sharp.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=2.0.12.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.12\lib\net45\log4net.dll</HintPath>
+    <Reference Include="COM">
+      <HintPath>..\..\COM\COM.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -198,7 +188,6 @@
     <Content Include="bin\Antlr3.Runtime.dll" />
     <Content Include="bin\Antlr3.Runtime.pdb" />
     <Content Include="bin\BouncyCastle.Crypto.dll" />
-    <Content Include="bin\CC.dll" />
     <Content Include="bin\COM.dll" />
     <Content Include="bin\DAL.dll" />
     <Content Include="bin\DAL.pdb" />
